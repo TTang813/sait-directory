@@ -278,17 +278,18 @@ export default function OptInSuccessPage({ params }: { params: Promise<{ token: 
           </div>
 
           {/* Confirmation */}
-          <div className="flex items-center justify-center gap-2 mb-6">
-            <div className="w-5 h-5 rounded-full bg-[var(--color-gold)]/15 flex items-center justify-center">
-              <CheckCircle className="w-3.5 h-3.5 text-[var(--color-gold)]" />
-            </div>
-            <p className="text-sm font-medium text-[var(--color-navy)]">
-              You&apos;re live in the Directory
+          <div className="text-center mb-6">
+            <p className="text-sm font-medium text-[var(--color-navy)] mb-1">
+              You&apos;re successfully live in the Directory
+            </p>
+            <p className="text-xs text-[var(--color-text-secondary)]">
+              Clients can now find and contact you
             </p>
           </div>
 
           {/* Card as the focal point */}
-          <div className="flex justify-center mb-8">
+          <div className="relative flex justify-center mb-8">
+            <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-gold)]/10 via-transparent to-[var(--color-gold)]/5 rounded-3xl blur-2xl scale-105" />
             <ListingCard
               fullName={mockData.fullName}
               region={mockData.region}
