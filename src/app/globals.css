@@ -1,0 +1,178 @@
+@import "tailwindcss";
+
+/* ============================================
+   SAIT Design System — CSS Variables
+   Based on brand guidelines from thesait.org.za
+   ============================================ */
+
+:root {
+  /* ---- Brand Colors ---- */
+  /* Primary */
+  --color-navy: #1F212E;
+  --color-gold: #E2BF29;
+  --color-navy-bg: #333447;
+
+  /* Neutrals */
+  --color-white: #FFFFFF;
+  --color-off-white: #F8F8F6;
+  --color-light-gray: #F2F2F0;
+  --color-mid-gray: #CCCCCC;
+  --color-text-secondary: #666666;
+  --color-neutral-dark: #555555;
+
+  /* Status Colors */
+  --color-success: #2D7A4F;
+  --color-success-bg: #E8F5EE;
+  --color-warning: #B8860B;
+  --color-warning-bg: #FEF9E7;
+  --color-error: #C0392B;
+  --color-error-bg: #FDECEA;
+  --color-neutral: #555555;
+
+  /* Backgrounds */
+  --background: var(--color-off-white);
+  --foreground: var(--color-navy);
+
+  /* ---- Typography ---- */
+  --font-primary: 'Montserrat', sans-serif;
+
+  /* ---- Border Radius ---- */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
+
+  /* ---- Shadows ---- */
+  --shadow-sm: 0 1px 3px rgba(31, 33, 46, 0.08);
+  --shadow-md: 0 4px 12px rgba(31, 33, 46, 0.10);
+  --shadow-lg: 0 8px 24px rgba(31, 33, 46, 0.12);
+  --shadow-xl: 0 16px 40px rgba(31, 33, 46, 0.14);
+
+  /* ---- Spacing (8px grid) ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* ---- Breakpoints ---- */
+  --bp-sm: 480px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+  --bp-2xl: 1440px;
+}
+
+@theme inline {
+  /* Tailwind color integration */
+  --color-navy: var(--color-navy);
+  --color-gold: var(--color-gold);
+  --color-navy-bg: var(--color-navy-bg);
+  --color-off-white: var(--color-off-white);
+  --color-light-gray: var(--color-light-gray);
+  --color-mid-gray: var(--color-mid-gray);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-success: var(--color-success);
+  --color-success-bg: var(--color-success-bg);
+  --color-warning: var(--color-warning);
+  --color-warning-bg: var(--color-warning-bg);
+  --color-error: var(--color-error);
+  --color-error-bg: var(--color-error-bg);
+  --color-neutral-dark: var(--color-neutral-dark);
+
+  /* Font families */
+  --font-sans: var(--font-primary);
+  --font-mono: monospace;
+}
+
+/* ---- Base Styles ---- */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-primary);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---- Typography Classes ---- */
+.text-h1 {
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.text-h2 {
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.text-h3 {
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.text-body {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+.text-small {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+.text-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ---- Focus Styles ---- */
+*:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ---- Selection ---- */
+::selection {
+  background: var(--color-gold);
+  color: var(--color-navy);
+}
+
+/* ---- Scrollbar ---- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-light-gray);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-mid-gray);
+  border-radius: var(--radius-pill);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}
