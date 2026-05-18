@@ -55,7 +55,9 @@ export default function OptInStep1Page({
 
           {/* Content */}
           <div className="mb-8">
-            <CheckCircle className="w-16 h-16 text-[var(--color-success)] mx-auto mb-6" />
+            <div className="w-16 h-16 rounded-full bg-[var(--color-gold)]/10 flex items-center justify-center mx-auto mb-6">
+              <CheckCircle className="w-8 h-8 text-[var(--color-gold)]" />
+            </div>
             <h1 className="text-h2 text-[var(--color-navy)] mb-3">
               Welcome back, {mockMemberName}
             </h1>

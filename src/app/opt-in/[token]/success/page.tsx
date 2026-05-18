@@ -255,28 +255,32 @@ export default function OptInSuccessPage({ params }: { params: Promise<{ token: 
             {[
               { label: "Verify", done: true },
               { label: "Details", done: true },
-              { label: "Done", done: false },
+              { label: "Done", active: true },
             ].map((step, i) => (
               <div key={step.label} className="flex items-center gap-2">
                 <div
                   className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                    step.done
+                    step.active
+                      ? "bg-[var(--color-gold)] text-[var(--color-navy)]"
+                      : step.done
                       ? "bg-[var(--color-gold)] text-[var(--color-navy)]"
                       : "bg-[var(--color-light-gray)] text-[var(--color-text-secondary)]"
                   }`}
                 >
-                  {step.done ? "✓" : i + 1}
+                  {(step.done || step.active) ? "✓" : i + 1}
                 </div>
-                <span className="text-xs font-medium text-[var(--color-text-secondary)]">{step.label}</span>
-                {i < 2 && <div className="w-6 h-px bg-[var(--color-light-gray)]" />}
+                <span className={`text-xs font-medium ${(step.done || step.active) ? "text-[var(--color-navy)]" : "text-[var(--color-text-secondary)]"}`}>
+                  {step.label}
+                </span>
+                {i < 2 && <div className={`w-6 h-px ${step.done || step.active ? "bg-[var(--color-gold)]" : "bg-[var(--color-light-gray)]"}`} />}
               </div>
             ))}
           </div>
 
           {/* Confirmation */}
           <div className="flex items-center justify-center gap-2 mb-6">
-            <div className="w-5 h-5 rounded-full bg-[var(--color-success-bg)] flex items-center justify-center">
-              <CheckCircle className="w-3.5 h-3.5 text-[var(--color-success)]" />
+            <div className="w-5 h-5 rounded-full bg-[var(--color-gold)]/15 flex items-center justify-center">
+              <CheckCircle className="w-3.5 h-3.5 text-[var(--color-gold)]" />
             </div>
             <p className="text-sm font-medium text-[var(--color-navy)]">
               You&apos;re live in the Directory
