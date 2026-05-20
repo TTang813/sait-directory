@@ -5,8 +5,19 @@ import { useState } from "react";
 import Link from "next/link";
 import { Logo } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
+import type { ReactNode } from "react";
 
-const SECTIONS = [
+type Section = {
+  num: string;
+  title: string;
+  body?: ReactNode;
+  lead?: string;
+  items?: string[];
+  note?: string;
+  highlight?: boolean;
+};
+
+const SECTIONS: Section[] = [
   {
     num: "01",
     title: "Purpose of the Directory",
