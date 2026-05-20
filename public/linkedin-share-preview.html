@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAIT — LinkedIn Share Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1F212E;
+    --gold: #E2BF29;
+    --navy-bg: #2A2D3E;
+    --off-white: #F8F8F6;
+    --light-gray: #F2F2F0;
+    --mid-gray: #CCCCCC;
+    --text-sec: #666666;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--off-white);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 24px 80px;
+    gap: 0;
+  }
+
+  /* ---- Header ---- */
+  .site-header {
+    width: 100%;
+    max-width: 1100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 48px;
+  }
+
+  .logo {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 28px;
+    color: var(--navy);
+    letter-spacing: -0.03em;
+    text-decoration: none;
+  }
+
+  .logo span { color: var(--gold); }
+
+  .tag {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-sec);
+    background: var(--light-gray);
+    padding: 4px 12px;
+    border-radius: 999px;
+  }
+
+  /* ---- Intro ---- */
+  .intro {
+    max-width: 580px;
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .intro h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--navy);
+    letter-spacing: -0.03em;
+    margin-bottom: 12px;
+    line-height: 1.15;
+  }
+
+  .intro p {
+    font-size: 15px;
+    color: var(--text-sec);
+    line-height: 1.65;
+  }
+
+  /* ---- Layout ---- */
+  .preview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    max-width: 1100px;
+    width: 100%;
+    align-items: start;
+  }
+
+  @media (max-width: 800px) {
+    .preview-grid { grid-template-columns: 1fr; }
+  }
+
+  .col-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-sec);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .col-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--mid-gray);
+  }
+
+  /* ---- The LinkedIn Card ---- */
+  .ln-card {
+    background: #ffffff;
+    border: 1px solid #E4E4E7;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(31,33,46,0.10);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  .ln-card-head {
+    padding: 14px 16px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 4px;
+    background: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--navy);
+    font-family: 'Montserrat', sans-serif;
+    flex-shrink: 0;
+  }
+
+  .post-meta {
+    flex: 1;
+    padding-bottom: 10px;
+  }
+
+  .post-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(0,0,0,0.9);
+    line-height: 1.3;
+  }
+
+  .post-sub {
+    font-size: 12px;
+    color: rgba(0,0,0,0.6);
+    line-height: 1.3;
+    margin-top: 1px;
+  }
+
+  .post-time {
+    font-size: 12px;
+    color: rgba(0,0,0,0.6);
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .time-dot {
+    display: inline-block;
+    width: 3px;
+    height: 3px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 50%;
+  }
+
+  .post-body {
+    padding: 0 16px 14px;
+  }
+
+  .post-text {
+    font-size: 14px;
+    line-height: 1.55;
+    color: rgba(0,0,0,0.9);
+  }
+
+  .post-text strong {
+    font-weight: 600;
+  }
+
+  /* ---- OG Link Preview ---- */
+  .og-card {
+    margin: 0 12px 12px;
+    border: 1px solid #E4E4E7;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #FAFAFA;
+  }
+
+  .og-image {
+    height: 200px;
+    background: var(--navy);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .og-image::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 1px 1px, rgba(226,191,41,0.25) 1px, transparent 0);
+    background-size: 28px 28px;
+  }
+
+  .og-logo {
+    width: 140px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .og-tagline {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(226,191,41,0.6);
+    position: relative;
+    z-index: 1;
+  }
+
+  .og-content {
+    padding: 12px 14px;
+  }
+
+  .og-domain {
+    font-size: 11px;
+    color: #6B7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 3px;
+  }
+
+  .og-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+    line-height: 1.35;
+    margin-bottom: 5px;
+  }
+
+  .og-desc {
+    font-size: 13px;
+    color: #6B7280;
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ---- LinkedIn Reactions ---- */
+  .ln-actions {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 4px 4px 2px;
+    border-top: 1px solid #F3F4F6;
+  }
+
+  .ln-action {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 4px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(0,0,0,0.6);
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .ln-action:hover { background: #F3F4F6; color: rgba(0,0,0,0.8); }
+  .ln-action svg { width: 20px; height: 20px; }
+
+  /* ---- Info Panel ---- */
+  .info-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .info-card {
+    background: white;
+    border: 1px solid #E4E4E7;
+    border-radius: 10px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(31,33,46,0.06);
+  }
+
+  .info-card h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.01em;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .info-card h3 .num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 12px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .info-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .info-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13.5px;
+    color: var(--text-sec);
+    line-height: 1.5;
+  }
+
+  .info-list li .bullet {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+
+  /* ---- Technical Details ---- */
+  .tech-block {
+    background: var(--navy);
+    border-radius: 10px;
+    padding: 20px 24px;
+    color: rgba(255,255,255,0.85);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .tech-block h4 {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .tech-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .tech-key {
+    color: rgba(255,255,255,0.4);
+    min-width: 100px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+  }
+
+  .tech-val {
+    color: rgba(255,255,255,0.85);
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+  }
+
+  /* ---- Arrow ---- */
+  .arrow-note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 18px;
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #92400E;
+    line-height: 1.5;
+  }
+
+  .arrow-note strong { font-weight: 600; }
+
+  /* ---- Footer ---- */
+  .site-footer {
+    margin-top: 64px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--mid-gray);
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="#" class="logo">SAI<span>T</span></a>
+  <span class="tag">LinkedIn Share Preview</span>
+</header>
+
+<div class="intro">
+  <h1>What members share on LinkedIn</h1>
+  <p>When a practitioner joins the directory, they can share their listing on LinkedIn. This card is automatically generated from their profile data — no extra design work needed.</p>
+</div>
+
+<div class="preview-grid">
+  <!-- LEFT: The LinkedIn Card -->
+  <div>
+    <div class="col-label">LinkedIn Post</div>
+    <div class="ln-card">
+      <!-- Profile head -->
+      <div class="ln-card-head">
+        <div class="avatar">JS</div>
+        <div class="post-meta">
+          <div class="post-name">Jane Smith</div>
+          <div class="post-sub">Tax Practitioner &middot; SAIT Member</div>
+          <div class="post-time">Just now <span class="time-dot"></span> &#127760;</div>
+        </div>
+      </div>
+
+      <!-- Post text -->
+      <div class="post-body">
+        <p class="post-text">
+          I&apos;m now listed in the <strong>SAIT Practitioner Directory</strong> &mdash; South Africa&apos;s verified directory of certified tax professionals.
+          <br><br>
+          Find me here:
+        </p>
+      </div>
+
+      <!-- OG Link Preview -->
+      <div class="og-card">
+        <div class="og-image">
+          <svg class="og-logo" viewBox="0 0 288 60" xmlns="http://www.w3.org/2000/svg" aria-label="SAIT">
+            <text x="0" y="48" font-family="Montserrat, Arial Black, sans-serif" font-size="54" font-weight="900" fill="#E2BF29" letter-spacing="-2">SAIT</text>
+          </svg>
+          <div class="og-tagline">Practitioner Directory</div>
+        </div>
+        <div class="og-content">
+          <div class="og-domain">directory.thesait.org.za</div>
+          <div class="og-title">Jane Smith &mdash; SAIT Practitioner Directory</div>
+          <div class="og-desc">Gauteng &middot; Corporate Income Tax &middot; VAT &middot; PR-2024-12345</div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="ln-actions">
+        <button class="ln-action">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+          Like
+        </button>
+        <button class="ln-action">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Comment
+        </button>
+        <button class="ln-action">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+          Repost
+        </button>
+        <button class="ln-action">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+          Send
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Info -->
+  <div class="info-panel">
+    <div class="info-card">
+      <h3><span class="num">1</span> How it works</h3>
+      <ul class="info-list">
+        <li><span class="bullet"></span>Member completes Opt-in Step 2, then clicks "Share on LinkedIn"</li>
+        <li><span class="bullet"></span>The page opens LinkedIn&apos;s native share dialog pre-filled with their name, specialisations, and the directory URL</li>
+        <li><span class="bullet"></span>LinkedIn automatically generates the preview card from the URL&apos;s Open Graph (OG) tags</li>
+        <li><span class="bullet"></span>No image file is needed &mdash; LinkedIn builds the card from text data</li>
+      </ul>
+    </div>
+
+    <div class="arrow-note">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      The card thumbnail comes from a <strong>pure CSS background</strong> on the shared URL &mdash; no image file to manage or upload.
+    </div>
+
+    <div class="info-card">
+      <h3><span class="num">2</span> OG metadata injected on the practitioner page</h3>
+      <ul class="info-list">
+        <li><span class="bullet"></span><strong>og:title</strong> — &quot;Jane Smith — SAIT Practitioner Directory&quot;</li>
+        <li><span class="bullet"></span><strong>og:description</strong> — Region, top 3 specialisations, PR number</li>
+        <li><span class="bullet"></span><strong>og:image</strong> — A server-rendered HTML page styled to look like a branded card, served as a PNG via Next.js <code style="background:#F2F2F0;padding:1px 5px;border-radius:3px;font-size:11px">og:image</code> endpoint</li>
+        <li><span class="bullet"></span><strong>og:url</strong> — The practitioner&apos;s unique directory URL</li>
+      </ul>
+    </div>
+
+    <div class="tech-block">
+      <h4>Open Graph Tags &mdash; Practitioner Page</h4>
+      <div class="tech-row">
+        <span class="tech-key">og:type</span>
+        <span class="tech-val">website</span>
+      </div>
+      <div class="tech-row">
+        <span class="tech-key">og:title</span>
+        <span class="tech-val">Jane Smith — SAIT Practitioner Directory</span>
+      </div>
+      <div class="tech-row">
+        <span class="tech-key">og:desc</span>
+        <span class="tech-val">Gauteng · Corporate Income Tax · VAT · PR-2024-12345</span>
+      </div>
+      <div class="tech-row">
+        <span class="tech-key">og:url</span>
+        <span class="tech-val">directory.thesait.org.za/p/PR-2024-12345</span>
+      </div>
+      <div class="tech-row">
+        <span class="tech-key">og:image</span>
+        <span class="tech-val">/api/og?pr=PR-2024-12345</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  SAIT Practitioner Directory &middot; South African Institute of Taxation
+</footer>
+
+</body>
+</html>

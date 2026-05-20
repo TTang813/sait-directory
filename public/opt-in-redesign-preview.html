@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAIT Opt-in — Redesigned UI Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1F212E;
+      --gold: #E2BF29;
+      --white: #FFFFFF;
+      --off-white: #F8F6F1;
+      --light-gray: #F0EEE9;
+      --mid-gray: #C8C4BC;
+      --text-sec: #7A7772;
+      --radius-xs: 6px;
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-pill: 999px;
+      --shadow-sm: 0 2px 6px rgba(31,33,46,0.08);
+      --shadow-md: 0 6px 20px rgba(31,33,46,0.10);
+    }
+
+    body {
+      font-family: 'Montserrat', system-ui, sans-serif;
+      background: #F0EDE8;
+      color: var(--navy);
+      min-height: 100vh;
+    }
+
+    /* ── Layout ── */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar nav ── */
+    .sidebar {
+      width: 260px;
+      flex-shrink: 0;
+      background: white;
+      border-right: 1px solid var(--light-gray);
+      padding: 32px 20px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .sidebar-logo {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      color: var(--navy);
+      margin-bottom: 40px;
+    }
+    .sidebar-logo span {
+      display: inline-block;
+      background: var(--navy);
+      color: var(--gold);
+      padding: 4px 7px;
+      border-radius: 5px;
+      font-size: 9px;
+      margin-right: 6px;
+    }
+    .section-label {
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-sec);
+      padding: 0 8px;
+      margin-bottom: 8px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text-sec);
+      cursor: pointer;
+      margin-bottom: 2px;
+      transition: all 0.15s;
+    }
+    .nav-item:hover { background: var(--light-gray); color: var(--navy); }
+    .nav-item.active {
+      background: rgba(226,191,41,0.12);
+      color: var(--navy);
+      font-weight: 600;
+    }
+    .step-num {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: var(--light-gray);
+      color: var(--text-sec);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .nav-item.active .step-num { background: var(--gold); color: var(--navy); }
+
+    /* ── Main content ── */
+    .main {
+      flex: 1;
+      padding: 48px 60px;
+      overflow-y: auto;
+    }
+    .page-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-sec);
+      margin-bottom: 6px;
+    }
+    .page-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-sec);
+      margin-bottom: 32px;
+    }
+
+    /* ── Phone frame ── */
+    .phone-wrap { margin-bottom: 40px; }
+    .phone-label {
+      font-size: 10px; font-weight: 800; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-sec); margin-bottom: 10px;
+    }
+    .phone-frame {
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 8px 40px rgba(31,33,46,0.12), 0 2px 8px rgba(31,33,46,0.06);
+      overflow: hidden;
+      max-width: 440px;
+      border: 1px solid rgba(31,33,46,0.06);
+    }
+    .phone-header {
+      height: 36px;
+      background: var(--navy);
+      display: flex; align-items: center; padding: 0 20px; gap: 6px;
+    }
+    .phone-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.12); }
+    .phone-screen {
+      background: var(--off-white);
+      min-height: 720px;
+      display: flex; flex-direction: column;
+    }
+
+    /* ── Phone hero (agreement) ── */
+    .phone-hero {
+      background: linear-gradient(160deg, #1F212E 0%, #2a2d3e 100%);
+      padding: 28px 24px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .phone-hero-dots {
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(226,191,41,0.09) 1px, transparent 1px);
+      background-size: 22px 22px;
+    }
+    .phone-hero-line {
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: var(--gold);
+    }
+    .phone-hero-content { position: relative; z-index: 1; }
+    .phone-hero-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 10px; border-radius: 999px;
+      background: rgba(226,191,41,0.12);
+      border: 1px solid rgba(226,191,41,0.25);
+      margin-bottom: 14px;
+    }
+    .phone-hero-badge span {
+      font-size: 9px; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--gold);
+    }
+    .phone-hero-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 22px; font-weight: 700; color: white;
+      line-height: 1.1; margin-bottom: 8px; letter-spacing: -0.01em;
+    }
+    .phone-hero-sub {
+      font-size: 11.5px; color: rgba(255,255,255,0.5);
+      line-height: 1.5; margin-bottom: 4px;
+    }
+    .phone-hero-meta {
+      font-size: 10px; color: rgba(255,255,255,0.25);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Phone body ── */
+    .phone-body { flex: 1; padding: 20px 22px 28px; overflow-y: auto; }
+
+    /* Section with editorial style */
+    .phone-section { margin-bottom: 20px; }
+    .phone-section-head {
+      display: flex; align-items: baseline; gap: 10px;
+      margin-bottom: 6px;
+    }
+    .phone-section-num {
+      font-size: 10px; font-weight: 800; color: var(--gold);
+      font-family: 'Montserrat', sans-serif;
+    }
+    .phone-section-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 14px; font-weight: 700; color: var(--navy);
+      flex: 1;
+    }
+    .phone-section-rule {
+      height: 1px; background: var(--light-gray);
+      margin-bottom: 8px;
+    }
+    .phone-section-body {
+      font-size: 11.5px; color: var(--text-sec); line-height: 1.6;
+      padding-left: 24px;
+    }
+
+    /* Bullet list */
+    .phone-list { padding-left: 24px; }
+    .phone-list li {
+      font-size: 11.5px; color: var(--text-sec); line-height: 1.6;
+      display: flex; align-items: flex-start; gap: 6px; margin-bottom: 4px;
+    }
+    .phone-list li::before {
+      content: '';
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--gold); flex-shrink: 0; margin-top: 6px;
+    }
+
+    /* Highlight box */
+    .phone-highlight {
+      background: rgba(226,191,41,0.06);
+      border: 1px solid rgba(226,191,41,0.2);
+      border-left: 3px solid var(--gold);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      margin: 8px 0 0 24px;
+    }
+    .phone-highlight-label {
+      font-size: 9px; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 4px;
+    }
+    .phone-highlight p { font-size: 11px; color: var(--text-sec); line-height: 1.6; }
+
+    /* ── Consent box ── */
+    .phone-consent {
+      margin: 16px 0 0;
+      padding: 16px 18px;
+      background: white;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--light-gray);
+    }
+    .phone-consent-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 4px;
+    }
+    .phone-consent-sub {
+      font-size: 11px; color: var(--text-sec); margin-bottom: 12px; line-height: 1.5;
+    }
+    .phone-consent-row {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--gold);
+      background: rgba(226,191,41,0.04);
+      cursor: pointer;
+    }
+    .phone-checkbox {
+      width: 20px; height: 20px; border-radius: 6px;
+      background: var(--gold); border: 2px solid var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .phone-checkbox-check {
+      width: 11px; height: 11px;
+    }
+    .phone-consent-text p:first-child {
+      font-size: 12px; font-weight: 600; color: var(--navy); margin-bottom: 3px;
+    }
+    .phone-consent-text p:last-child {
+      font-size: 11px; color: var(--text-sec); line-height: 1.5;
+    }
+    .phone-consent-cta {
+      margin-top: 10px;
+      width: 100%; padding: 11px;
+      background: var(--gold); color: var(--navy);
+      border: none; border-radius: var(--radius-sm);
+      font-size: 13px; font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      cursor: pointer; text-align: center;
+    }
+    .phone-consent-hint {
+      text-align: center; font-size: 11px;
+      color: var(--text-sec); margin-top: 6px;
+    }
+
+    /* ── Phone footer ── */
+    .phone-footer {
+      padding: 14px;
+      text-align: center;
+      border-top: 1px solid var(--light-gray);
+    }
+    .phone-footer p { font-size: 10px; color: rgba(255,255,255,0.3); }
+    .phone-footer-light {
+      background: white;
+      border-top: 1px solid var(--light-gray);
+      padding: 16px;
+      text-align: center;
+    }
+    .phone-footer-light p { font-size: 10px; color: var(--text-sec); }
+
+    /* ── Step 2 form ── */
+    .phone-step-bar {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0; padding: 20px 24px 0;
+    }
+    .phone-step-item {
+      display: flex; align-items: center; gap: 6px;
+    }
+    .phone-step-circle {
+      width: 26px; height: 26px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700;
+      background: var(--gold); color: var(--navy);
+    }
+    .phone-step-circle.g { background: var(--light-gray); color: var(--text-sec); }
+    .phone-step-label { font-size: 11px; font-weight: 600; color: var(--navy); }
+    .phone-step-label.muted { color: var(--text-sec); font-weight: 400; }
+    .phone-step-line {
+      width: 28px; height: 1px; background: var(--gold); margin: 0 4px;
+    }
+    .phone-step-line.muted { background: var(--light-gray); }
+
+    .phone-form-label {
+      display: inline-block;
+      font-size: 9px; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(226,191,41,0.1);
+      color: var(--gold);
+      border: 1px solid rgba(226,191,41,0.2);
+      margin-bottom: 10px;
+    }
+    .phone-form-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 20px; font-weight: 700; color: var(--navy);
+      margin-bottom: 4px; letter-spacing: -0.01em;
+    }
+    .phone-form-sub {
+      font-size: 12px; color: var(--text-sec); margin-bottom: 20px; line-height: 1.5;
+    }
+
+    .phone-field { margin-bottom: 14px; }
+    .phone-field-label {
+      font-size: 11px; font-weight: 700; color: var(--navy);
+      display: block; margin-bottom: 5px;
+    }
+    .phone-input {
+      width: 100%; padding: 11px 14px;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--mid-gray);
+      font-size: 14px; font-family: 'Montserrat', sans-serif;
+      color: var(--navy); background: white;
+      outline: none; transition: border-color 0.15s;
+    }
+    .phone-input:focus { border-color: var(--gold); }
+    .phone-input.readonly {
+      background: var(--light-gray); opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    /* Multi-select chips */
+    .phone-chips {
+      display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 4px;
+    }
+    .phone-chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 600; padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(226,191,41,0.1);
+      color: var(--navy);
+      border: 1px solid rgba(226,191,41,0.3);
+    }
+    .phone-chip-remove { font-size: 14px; cursor: pointer; opacity: 0.7; }
+    .phone-chip-remove:hover { opacity: 1; }
+    .phone-chip-hint { font-size: 11px; color: var(--text-sec); }
+
+    /* Company section */
+    .phone-company {
+      background: var(--light-gray); border-radius: var(--radius-md);
+      padding: 14px; margin-bottom: 16px;
+    }
+    .phone-toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 10px;
+    }
+    .phone-toggle-label { font-size: 12px; color: var(--text-sec); }
+    .phone-toggle {
+      width: 44px; height: 26px; border-radius: 999px;
+      background: var(--gold); position: relative; cursor: pointer;
+    }
+    .phone-toggle-knob {
+      position: absolute; top: 3px; left: 21px;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    }
+
+    /* ── Design tokens panel ── */
+    .design-panel {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--light-gray);
+      margin-bottom: 32px;
+    }
+    .design-panel-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 4px;
+    }
+    .design-panel-sub {
+      font-size: 12px; color: var(--text-sec); margin-bottom: 20px;
+    }
+    .token-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+    }
+    .token-card {
+      padding: 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--light-gray);
+      background: var(--light-gray);
+    }
+    .token-swatch {
+      width: 32px; height: 32px; border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    .token-name { font-size: 11px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+    .token-value { font-size: 10px; color: var(--text-sec); font-family: monospace; }
+
+    .font-pair {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    .font-card {
+      padding: 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--light-gray);
+      background: var(--light-gray);
+    }
+    .font-card-label {
+      font-size: 9px; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-sec); margin-bottom: 6px;
+    }
+    .font-display-sample {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 20px; font-weight: 700; color: var(--navy); line-height: 1.1; margin-bottom: 4px;
+    }
+    .font-body-sample {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px; color: var(--text-sec); line-height: 1.5;
+    }
+    .font-body-sample strong { color: var(--navy); font-weight: 600; }
+
+    .radius-demo {
+      display: flex; gap: 12px; align-items: center;
+    }
+    .radius-item {
+      text-align: center;
+    }
+    .radius-swatch {
+      background: var(--light-gray);
+      border: 2px solid var(--mid-gray);
+      margin-bottom: 6px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 800px) {
+      .layout { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; position: static; }
+      .main { padding: 24px 20px; }
+      .token-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <span>SAIT</span> Practitioner Directory
+    </div>
+
+    <div class="section-label">Opt-in Flow</div>
+    <div class="nav-item active" onclick="this.parentElement.children[3].click()">
+      <div class="step-num">1</div>
+      <span>Step 1 — Verify</span>
+    </div>
+    <div class="nav-item">
+      <div class="step-num" style="background:var(--gold);color:var(--navy)">2</div>
+      <span>Step 2 — Details</span>
+    </div>
+    <div class="nav-item">
+      <div class="step-num">3</div>
+      <span>Step 3 — Done</span>
+    </div>
+
+    <div class="section-label" style="margin-top:24px">Reference</div>
+    <div class="nav-item">
+      <div class="step-num" style="background:var(--light-gray)">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <span>Agreement Document</span>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Design tokens -->
+    <div class="design-panel">
+      <div class="design-panel-title">Design System — Redesigned</div>
+      <div class="design-panel-sub">Playfair Display (headings) + Montserrat (body) · Unified rounded system · Gold accent palette</div>
+
+      <!-- Colors -->
+      <div style="margin-bottom:16px">
+        <div class="section-label" style="padding:0;margin-bottom:10px">Color Palette</div>
+        <div class="token-grid">
+          <div class="token-card">
+            <div class="token-swatch" style="background:#1F212E"></div>
+            <div class="token-name">Navy</div>
+            <div class="token-value">#1F212E</div>
+          </div>
+          <div class="token-card">
+            <div class="token-swatch" style="background:#E2BF29"></div>
+            <div class="token-name">Gold</div>
+            <div class="token-value">#E2BF29</div>
+          </div>
+          <div class="token-card">
+            <div class="token-swatch" style="background:#F8F6F1"></div>
+            <div class="token-name">Off White</div>
+            <div class="token-value">#F8F6F1</div>
+          </div>
+          <div class="token-card">
+            <div class="token-swatch" style="background:#F0EEE9"></div>
+            <div class="token-name">Light Gray</div>
+            <div class="token-value">#F0EEE9</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fonts -->
+      <div style="margin-bottom:16px">
+        <div class="section-label" style="padding:0;margin-bottom:10px">Dual Type System</div>
+        <div class="font-pair">
+          <div class="font-card">
+            <div class="font-card-label">Display / Headings</div>
+            <div class="font-display-sample">Playfair Display</div>
+            <div class="font-body-sample">
+              <strong>Elegant serif</strong> for titles, section headings, and document titles. Gives an editorial, trustworthy feel.
+            </div>
+          </div>
+          <div class="font-card">
+            <div class="font-card-label">Body / UI</div>
+            <div class="font-body-sample" style="font-size:14px;font-weight:600;color:var(--navy);margin-bottom:4px">Montserrat</div>
+            <div class="font-body-sample">
+              Clean, modern sans-serif for body text, labels, buttons, and all UI elements.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Radius -->
+      <div>
+        <div class="section-label" style="padding:0;margin-bottom:10px">Unified Border Radius</div>
+        <div class="radius-demo">
+          <div class="radius-item">
+            <div class="radius-swatch" style="width:32px;height:32px;border-radius:6px"></div>
+            <div class="token-name">6px</div>
+            <div class="token-value">xs</div>
+          </div>
+          <div class="radius-item">
+            <div class="radius-swatch" style="width:32px;height:32px;border-radius:10px"></div>
+            <div class="token-name">10px</div>
+            <div class="token-value">sm</div>
+          </div>
+          <div class="radius-item">
+            <div class="radius-swatch" style="width:32px;height:32px;border-radius:16px"></div>
+            <div class="token-name">16px</div>
+            <div class="token-value">md</div>
+          </div>
+          <div class="radius-item">
+            <div class="radius-swatch" style="width:32px;height:32px;border-radius:24px"></div>
+            <div class="token-name">24px</div>
+            <div class="token-value">lg</div>
+          </div>
+          <div class="radius-item">
+            <div class="radius-swatch" style="width:32px;height:32px;border-radius:999px;width:48px"></div>
+            <div class="token-name">999px</div>
+            <div class="token-value">pill</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 Form -->
+    <div class="phone-wrap">
+      <div class="phone-label">Step 2 — Details Form</div>
+      <div class="phone-frame">
+        <div class="phone-header">
+          <div class="phone-dot"></div><div class="phone-dot"></div><div class="phone-dot"></div>
+        </div>
+        <div class="phone-screen">
+
+          <!-- Step bar -->
+          <div class="phone-step-bar">
+            <div class="phone-step-item">
+              <div class="phone-step-circle g">✓</div>
+              <span class="phone-step-label muted">Verify</span>
+            </div>
+            <div class="phone-step-line"></div>
+            <div class="phone-step-item">
+              <div class="phone-step-circle">2</div>
+              <span class="phone-step-label">Details</span>
+            </div>
+            <div class="phone-step-line muted"></div>
+            <div class="phone-step-item">
+              <div class="phone-step-circle g">3</div>
+              <span class="phone-step-label muted">Done</span>
+            </div>
+          </div>
+
+          <div class="phone-body">
+            <div class="phone-form-label">Directory Opt-in</div>
+            <div class="phone-form-title">Review Your Information</div>
+            <div class="phone-form-sub">Your details are pre-filled from SAIT records. Update anything that needs changing.</div>
+
+            <div class="phone-field">
+              <label class="phone-field-label">Full Name</label>
+              <input class="phone-input" type="text" value="Jane Smith" />
+            </div>
+
+            <div class="phone-field">
+              <label class="phone-field-label">PR Number</label>
+              <input class="phone-input readonly" type="text" value="PR-2024-12345" readonly />
+            </div>
+
+            <div class="phone-field">
+              <label class="phone-field-label">Region</label>
+              <select class="phone-input">
+                <option>Gauteng</option>
+                <option>Western Cape</option>
+                <option>KwaZulu-Natal</option>
+              </select>
+            </div>
+
+            <div class="phone-field">
+              <label class="phone-field-label">Areas of Specialisation</label>
+              <div class="phone-chips">
+                <div class="phone-chip">Corporate Income Tax <span class="phone-chip-remove">×</span></div>
+                <div class="phone-chip">VAT <span class="phone-chip-remove">×</span></div>
+              </div>
+              <div class="phone-chip-hint">2 selected</div>
+            </div>
+
+            <div class="phone-company">
+              <div class="phone-field">
+                <label class="phone-field-label">Company Name</label>
+                <input class="phone-input" type="text" value="Smith Tax Consultants" />
+              </div>
+              <div class="phone-toggle-row">
+                <span class="phone-toggle-label">Show in directory listing</span>
+                <div class="phone-toggle">
+                  <div class="phone-toggle-knob"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Consent -->
+            <div class="phone-consent">
+              <div class="phone-consent-title">Your Consent</div>
+              <div class="phone-consent-sub">Please confirm that you have read and agree to the terms.</div>
+              <div class="phone-consent-row" onclick="this.style.borderColor=this.style.borderColor=='rgb(226, 191, 41)'?'rgb(200, 196, 188)':'rgb(226, 191, 41)';this.style.background=this.style.background=='rgba(226, 191, 41, 0.04)'?'rgba(242, 242, 240, 0.5)':'rgba(226, 191, 41, 0.04)'">
+                <div class="phone-checkbox">
+                  <svg class="phone-checkbox-check" viewBox="0 0 12 12" fill="none">
+                    <path d="M2 6l3 3 5-5" stroke="#1F212E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="phone-consent-text">
+                  <p>I have read and agree to the <strong style="color:var(--gold)">Directory Listing Agreement &amp; Privacy Notice</strong></p>
+                  <p>By checking this box, you consent to having your information displayed. You may withdraw consent at any time.</p>
+                </div>
+              </div>
+              <button class="phone-consent-cta">Confirm &amp; Join Directory</button>
+            </div>
+          </div>
+
+          <div class="phone-footer-light">
+            <p>© 2026 South African Institute of Taxation (SAIT)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agreement Document -->
+    <div class="phone-wrap">
+      <div class="phone-label">Agreement Document — Full Page</div>
+      <div class="phone-frame">
+        <div class="phone-header">
+          <div class="phone-dot"></div><div class="phone-dot"></div><div class="phone-dot"></div>
+        </div>
+        <div class="phone-screen">
+
+          <!-- Hero -->
+          <div class="phone-hero">
+            <div class="phone-hero-dots"></div>
+            <div class="phone-hero-line"></div>
+            <div class="phone-hero-content">
+              <div class="phone-hero-badge">
+                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#E2BF29" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>SAIT Practitioner Directory</span>
+              </div>
+              <div class="phone-hero-title">Directory Listing<br>Agreement</div>
+              <div class="phone-hero-sub">Please read this agreement carefully before opting in.</div>
+              <div class="phone-hero-meta">Version 1.0 · 2026 · SAIT</div>
+            </div>
+          </div>
+
+          <div class="phone-body">
+
+            <!-- Section 01 -->
+            <div class="phone-section">
+              <div class="phone-section-head">
+                <span class="phone-section-num">01</span>
+                <span class="phone-section-title">Purpose of the Directory</span>
+              </div>
+              <div class="phone-section-rule"></div>
+              <p class="phone-section-body">The SAIT Practitioner Directory is a voluntary, opt-in service for SAIT members in good standing to display their professional details and specialisations to the public.</p>
+            </div>
+
+            <!-- Section 02 -->
+            <div class="phone-section">
+              <div class="phone-section-head">
+                <span class="phone-section-num">02</span>
+                <span class="phone-section-title">Eligibility &amp; Membership</span>
+              </div>
+              <div class="phone-section-rule"></div>
+              <p class="phone-section-body">Only current SAIT members in good standing are eligible. Listings may be removed if membership lapses.</p>
+            </div>
+
+            <!-- Section 03 -->
+            <div class="phone-section">
+              <div class="phone-section-head">
+                <span class="phone-section-num">03</span>
+                <span class="phone-section-title">What We Display</span>
+              </div>
+              <div class="phone-section-rule"></div>
+              <p class="phone-section-body" style="margin-bottom:6px"><strong style="color:var(--navy)">Always shown:</strong> full name, PR number, region, specialisation(s).</p>
+              <ul class="phone-list">
+                <li>Your company name — only if you choose to include it</li>
+                <li>Your personal contact details — never displayed</li>
+              </ul>
+            </div>
+
+            <!-- Section 08 highlight -->
+            <div class="phone-section">
+              <div class="phone-section-head">
+                <span class="phone-section-num">08</span>
+                <span class="phone-section-title">Data Protection &amp; POPIA</span>
+              </div>
+              <div class="phone-section-rule"></div>
+              <div class="phone-highlight">
+                <div class="phone-highlight-label">Legal Basis — POPIA</div>
+                <p>By opting in, you consent to SAIT processing and publicly displaying your name, PR number, region, and specialisation(s) as described above, under POPIA.</p>
+              </div>
+            </div>
+
+            <!-- Consent at bottom -->
+            <div class="phone-consent">
+              <div class="phone-consent-title">Your Consent</div>
+              <div class="phone-consent-sub">Please confirm that you have read and agree to the terms above.</div>
+              <div class="phone-consent-row">
+                <div class="phone-checkbox">
+                  <svg class="phone-checkbox-check" viewBox="0 0 12 12" fill="none">
+                    <path d="M2 6l3 3 5-5" stroke="#1F212E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="phone-consent-text">
+                  <p>I have read and understood this agreement</p>
+                  <p>By checking this box, you give your consent to have your information displayed. You may withdraw consent at any time.</p>
+                </div>
+              </div>
+              <button class="phone-consent-cta">Continue to Listing Form</button>
+              <div class="phone-consent-hint">Read the agreement above to continue</div>
+            </div>
+
+          </div>
+
+          <div class="phone-footer">
+            <p>© 2026 South African Institute of Taxation (SAIT)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>
