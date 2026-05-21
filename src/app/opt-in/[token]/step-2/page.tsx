@@ -15,11 +15,11 @@ const ALL_SPECIALISATIONS = Object.entries(SPECIALISATION_CATEGORIES).flatMap(
 
 const DB_VALUES = {
   fullName: "Jane Smith",
-  regions: [],
+  regions: ["Gauteng"],
   specialisation: [],
-  companyName: "",
+  companyName: "Smith Tax Consultants",
   prNumber: "PR-2024-12345",
-  phone: "",
+  phone: "+27 82 123 4567",
 };
 
 function MultiSelect({

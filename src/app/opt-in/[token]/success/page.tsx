@@ -211,9 +211,9 @@ export default function OptInSuccessPage({ params }: { params: Promise<{ token: 
     fullName: "Jane Smith",
     regions: ["Gauteng"],
     specialisation: [],
-    companyName: "",
-    showCompany: false,
-    phone: "",
+    companyName: "Smith Tax Consultants",
+    showCompany: true,
+    phone: "+27 82 123 4567",
     showPhone: false,
     prNumber: "PR-2024-12345",
   };
