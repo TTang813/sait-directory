@@ -208,24 +208,12 @@ function MultiSelectRegions({
   onChange: (v: string[]) => void;
 }) {
   const [open, setOpen] = useState(false);
-  const allRegions = ["All Regions", ...REGIONS];
 
   const toggle = (val: string) => {
-    if (val === "All Regions") {
-      onChange([]);
-      return;
-    }
     const newValues = values.includes(val)
       ? values.filter((v) => v !== val)
       : [...values, val];
     onChange(newValues);
-  };
-
-  const displayLabel = () => {
-    if (values.length === 0) return "All Regions";
-    if (values.length === REGIONS.length) return "All Regions";
-    if (values.length === 1) return values[0];
-    return `${values.length} regions selected`;
   };
 
   return (
@@ -237,16 +225,50 @@ function MultiSelectRegions({
         style={{
           borderRadius: "var(--radius-md)",
           fontFamily: "var(--font-body)",
-          color: values.length === 0 ? "var(--color-navy)" : "var(--color-navy)",
+          color: values.length === 0 ? "var(--color-text-secondary)" : "var(--color-navy)",
         }}
       >
-        <span>{displayLabel()}</span>
+        <div className="flex flex-wrap gap-2 flex-1 min-w-0">
+          {values.length === 0 ? (
+            <span>Select regions</span>
+          ) : (
+            values.map((v) => (
+              <span
+                key={v}
+                className="inline-flex items-center gap-1.5"
+                style={{
+                  background: "rgba(226,191,41,0.1)",
+                  color: "var(--color-navy)",
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  padding: "4px 10px",
+                  borderRadius: "var(--radius-pill)",
+                  border: "1px solid rgba(226,191,41,0.3)",
+                  fontFamily: "var(--font-body)",
+                }}
+              >
+                {v}
+                <span
+                  role="button"
+                  tabIndex={0}
+                  onClick={(e) => { e.stopPropagation(); toggle(v); }}
+                  onKeyDown={(e) => e.key === "Enter" && toggle(v)}
+                  className="hover:opacity-70 cursor-pointer"
+                  style={{ lineHeight: 1 }}
+                >
+                  <X style={{ width: "12px", height: "12px" }} />
+                </span>
+              </span>
+            ))
+          )}
+        </div>
         <ChevronDown
           style={{
             width: "16px",
             height: "16px",
             color: "var(--color-text-secondary)",
             flexShrink: 0,
+            marginLeft: "8px",
             transform: open ? "rotate(180deg)" : "none",
             transition: "transform 0.2s",
           }}
@@ -275,11 +297,27 @@ function MultiSelectRegions({
           >
             Regions
           </div>
-          {allRegions.map((region) => {
-            const isAll = region === "All Regions";
-            const isSelected = isAll
-              ? values.length === 0 || values.length === REGIONS.length
-              : values.includes(region);
+          <button
+            type="button"
+            onClick={() => onChange([])}
+            className="w-full flex items-center justify-between px-4 py-3 text-sm text-left transition-colors"
+            style={{
+              fontFamily: "var(--font-body)",
+              color: values.length === 0 || values.length === REGIONS.length ? "var(--color-navy)" : "var(--color-text-secondary)",
+              fontWeight: values.length === 0 || values.length === REGIONS.length ? 600 : 400,
+              background: values.length === 0 || values.length === REGIONS.length ? "rgba(226,191,41,0.06)" : "transparent",
+              borderBottom: "1px solid var(--color-light-gray)",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-light-gray)")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = values.length === 0 || values.length === REGIONS.length ? "rgba(226,191,41,0.06)" : "transparent")}
+          >
+            <span>All Regions</span>
+            {(values.length === 0 || values.length === REGIONS.length) && (
+              <Check style={{ width: "14px", height: "14px", color: "var(--color-gold)" }} />
+            )}
+          </button>
+          {REGIONS.map((region) => {
+            const selected = values.includes(region);
             return (
               <button
                 key={region}
@@ -289,14 +327,14 @@ function MultiSelectRegions({
                 style={{
                   fontFamily: "var(--font-body)",
                   color: "var(--color-navy)",
-                  background: isSelected ? "rgba(226,191,41,0.06)" : "transparent",
+                  background: selected ? "rgba(226,191,41,0.06)" : "transparent",
                   borderBottom: "1px solid var(--color-light-gray)",
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-light-gray)")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = isSelected ? "rgba(226,191,41,0.06)" : "transparent")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = selected ? "rgba(226,191,41,0.06)" : "transparent")}
               >
-                <span style={{ fontWeight: isAll ? 600 : 400 }}>{region}</span>
-                {isSelected && (
+                <span>{region}</span>
+                {selected && (
                   <Check style={{ width: "14px", height: "14px", color: "var(--color-gold)" }} />
                 )}
               </button>
