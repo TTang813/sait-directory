@@ -7,7 +7,7 @@ import { useReactToPrint } from "react-to-print";
 import Image from "next/image";
 import { Logo } from "@/components/ui/logo";
 import { Card } from "@/components/ui/card";
-import { CheckCircle, MapPin, Building2, FileCheck, Download } from "lucide-react";
+import { CheckCircle, MapPin, Building2, FileCheck, Download, Phone } from "lucide-react";
 import { ShareImage } from "@/components/share-image";
 
 function LinkedInIcon({ className }: { className?: string }) {
@@ -21,19 +21,29 @@ function LinkedInIcon({ className }: { className?: string }) {
 function ListingCard({
   fullName,
   region,
+  regions,
   specialisation,
   companyName,
   prNumber,
   showCompany,
+  phone,
+  showPhone,
 }: {
   fullName: string;
   region: string;
+  regions?: string[];
   specialisation: string[];
   companyName: string;
   prNumber: string;
   showCompany: boolean;
+  phone?: string;
+  showPhone?: boolean;
 }) {
   const initials = fullName.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
+
+  const displayRegions = !regions || regions.length === 0 || regions.length === 9
+    ? "All Regions"
+    : regions.join(", ");
 
   return (
     <div
@@ -114,8 +124,14 @@ function ListingCard({
         <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "14px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <MapPin style={{ width: "13px", height: "13px", color: "rgba(255,255,255,0.38)", flexShrink: 0 }} />
-            <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)" }}>{region}</span>
+            <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)" }}>{displayRegions}</span>
           </div>
+          {showPhone && phone && (
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <Phone style={{ width: "13px", height: "13px", color: "rgba(255,255,255,0.38)", flexShrink: 0 }} />
+              <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)" }}>{phone}</span>
+            </div>
+          )}
           {showCompany && companyName && (
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <Building2 style={{ width: "13px", height: "13px", color: "rgba(255,255,255,0.38)", flexShrink: 0 }} />
@@ -172,11 +188,13 @@ export default function OptInSuccessPage({ params }: { params: Promise<{ token: 
 
   const mockData = {
     fullName: "Jane Smith",
-    region: "Gauteng",
+    regions: ["Gauteng"],
     specialisation: ["Corporate Income Tax", "VAT"],
     companyName: "Smith Tax Consultants",
     prNumber: "PR-2024-12345",
     showCompany: true,
+    phone: "+27 82 123 4567",
+    showPhone: false,
   };
 
   const fullShareUrl = `https://directory.thesait.org.za/practitioner/${mockData.prNumber}`;
@@ -232,12 +250,15 @@ export default function OptInSuccessPage({ params }: { params: Promise<{ token: 
       >
         <ShareImage
           fullName={mockData.fullName}
-          region={mockData.region}
+          region={mockData.regions?.[0] ?? "Gauteng"}
+          regions={mockData.regions}
           specialisation={mockData.specialisation}
           companyName={mockData.companyName}
           prNumber={mockData.prNumber}
           showCompany={mockData.showCompany}
           directoryUrl={fullShareUrl}
+          phone={mockData.phone}
+          showPhone={mockData.showPhone}
         />
       </div>
 
@@ -291,11 +312,14 @@ export default function OptInSuccessPage({ params }: { params: Promise<{ token: 
           <div className="flex justify-center mb-8">
             <ListingCard
               fullName={mockData.fullName}
-              region={mockData.region}
+              region={mockData.regions?.[0] ?? "Gauteng"}
+              regions={mockData.regions}
               specialisation={mockData.specialisation}
               companyName={mockData.companyName}
               prNumber={mockData.prNumber}
               showCompany={mockData.showCompany}
+              phone={mockData.phone}
+              showPhone={mockData.showPhone}
             />
           </div>
 

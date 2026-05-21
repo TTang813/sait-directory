@@ -37,7 +37,7 @@ export default function SearchPage() {
 
   const practitioners = useMemo(() => {
     return getMockPractitioners({
-      region: region || undefined,
+      regions: region ? [region] : undefined,
       specialisation: selectedSpecs.length > 0 ? selectedSpecs : undefined,
     });
   }, [region, selectedSpecs]);

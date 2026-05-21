@@ -1,28 +1,38 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { MapPin, Building2, FileCheck } from "lucide-react";
+import { MapPin, Building2, FileCheck, Phone } from "lucide-react";
 
 interface ShareImageData {
   fullName: string;
   region: string;
+  regions?: string[];
   specialisation: string[];
   companyName: string;
   prNumber: string;
   showCompany: boolean;
   directoryUrl: string;
+  phone?: string;
+  showPhone?: boolean;
 }
 
 export function ShareImage({
   fullName,
   region,
+  regions,
   specialisation,
   companyName,
   prNumber,
   showCompany,
   directoryUrl,
+  phone,
+  showPhone,
 }: ShareImageData) {
   const initials = fullName.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
+
+  const displayRegions = !regions || regions.length === 0 || regions.length === 9
+    ? "All Regions"
+    : regions.join(", ");
 
   return (
     <div
@@ -197,8 +207,14 @@ export function ShareImage({
               )}
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <MapPin style={{ width: "13px", height: "13px", color: "#9CA3AF" }} />
-                <span style={{ fontSize: "13.5px", color: "#4B5563" }}>{region}</span>
+                <span style={{ fontSize: "13.5px", color: "#4B5563" }}>{displayRegions}</span>
               </div>
+              {showPhone && phone && (
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <Phone style={{ width: "13px", height: "13px", color: "#9CA3AF" }} />
+                  <span style={{ fontSize: "13.5px", color: "#4B5563" }}>{phone}</span>
+                </div>
+              )}
             </div>
 
             {/* Specialisation */}

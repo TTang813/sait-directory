@@ -6,9 +6,11 @@ export interface Practitioner {
   id: string;
   fullName: string;
   region: string;
+  regions?: string[];
   specialisation: string[];
   prNumber: string;
   companyName?: string;
+  phone?: string;
   acceptingClients: boolean;
   isActive: boolean;
   isOptedIn: boolean;
@@ -17,10 +19,12 @@ export interface Practitioner {
 export interface PractitionerDisplayFields {
   showName: boolean;
   showRegion: boolean;
+  showRegions: boolean;
   showSpecialisation: boolean;
   showCompanyName: boolean;
   showAcceptingClients: boolean;
   showPRNumber: boolean;
+  showPhone: boolean;
 }
 
 export interface PractitionerProfile extends Practitioner {
@@ -30,6 +34,7 @@ export interface PractitionerProfile extends Practitioner {
 }
 
 export interface SearchFilters {
+  regions?: string[];
   region?: string;
   specialisation?: string[];
   acceptingClients?: boolean;

@@ -5,8 +5,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Logo } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
 import { REGIONS, SPECIALISATION_CATEGORIES } from "@/types";
 import { X, ChevronDown, Check } from "lucide-react";
 
@@ -17,10 +15,11 @@ const ALL_SPECIALISATIONS = Object.entries(SPECIALISATION_CATEGORIES).flatMap(
 
 const DB_VALUES = {
   fullName: "Jane Smith",
-  region: "Gauteng",
+  regions: ["Gauteng"],
   specialisation: ["Corporate Income Tax", "VAT"],
   companyName: "Smith Tax Consultants",
   prNumber: "PR-2024-12345",
+  phone: "+27 82 123 4567",
 };
 
 function MultiSelect({
@@ -201,6 +200,118 @@ function MultiSelect({
   );
 }
 
+function MultiSelectRegions({
+  values,
+  onChange,
+}: {
+  values: string[];
+  onChange: (v: string[]) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const allRegions = ["All Regions", ...REGIONS];
+
+  const toggle = (val: string) => {
+    if (val === "All Regions") {
+      onChange([]);
+      return;
+    }
+    const newValues = values.includes(val)
+      ? values.filter((v) => v !== val)
+      : [...values, val];
+    onChange(newValues);
+  };
+
+  const displayLabel = () => {
+    if (values.length === 0) return "All Regions";
+    if (values.length === REGIONS.length) return "All Regions";
+    if (values.length === 1) return values[0];
+    return `${values.length} regions selected`;
+  };
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between py-3 px-4 bg-white border border-[var(--color-mid-gray)] text-[15px] transition-all focus:outline-none focus:border-[var(--color-gold)] focus:shadow-[0_0_0_3px_rgba(226,191,41,0.12)]"
+        style={{
+          borderRadius: "var(--radius-md)",
+          fontFamily: "var(--font-body)",
+          color: values.length === 0 ? "var(--color-navy)" : "var(--color-navy)",
+        }}
+      >
+        <span>{displayLabel()}</span>
+        <ChevronDown
+          style={{
+            width: "16px",
+            height: "16px",
+            color: "var(--color-text-secondary)",
+            flexShrink: 0,
+            transform: open ? "rotate(180deg)" : "none",
+            transition: "transform 0.2s",
+          }}
+        />
+      </button>
+
+      {open && (
+        <div
+          className="absolute z-50 mt-1 w-full bg-white border border-[var(--color-mid-gray)]"
+          style={{
+            borderRadius: "var(--radius-md)",
+            boxShadow: "var(--shadow-lg)",
+            maxHeight: "300px",
+            overflowY: "auto",
+          }}
+        >
+          <div
+            className="px-4 py-2.5 text-[11px] font-bold uppercase tracking-wider"
+            style={{
+              background: "var(--color-light-gray)",
+              color: "var(--color-text-secondary)",
+              fontFamily: "var(--font-body)",
+              position: "sticky",
+              top: "0",
+            }}
+          >
+            Regions
+          </div>
+          {allRegions.map((region) => {
+            const isAll = region === "All Regions";
+            const isSelected = isAll
+              ? values.length === 0 || values.length === REGIONS.length
+              : values.includes(region);
+            return (
+              <button
+                key={region}
+                type="button"
+                onClick={() => toggle(region)}
+                className="w-full flex items-center justify-between px-4 py-3 text-sm text-left transition-colors"
+                style={{
+                  fontFamily: "var(--font-body)",
+                  color: "var(--color-navy)",
+                  background: isSelected ? "rgba(226,191,41,0.06)" : "transparent",
+                  borderBottom: "1px solid var(--color-light-gray)",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-light-gray)")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = isSelected ? "rgba(226,191,41,0.06)" : "transparent")}
+              >
+                <span style={{ fontWeight: isAll ? 600 : 400 }}>{region}</span>
+                {isSelected && (
+                  <Check style={{ width: "14px", height: "14px", color: "var(--color-gold)" }} />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {open && (
+        <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+      )}
+    </div>
+  );
+}
+
 function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
   return (
     <button
@@ -244,12 +355,14 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
 
   const [formData, setFormData] = useState({
     fullName: DB_VALUES.fullName,
-    region: DB_VALUES.region,
+    regions: [...DB_VALUES.regions],
     specialisation: [...DB_VALUES.specialisation],
     companyName: DB_VALUES.companyName,
+    phone: DB_VALUES.phone,
   });
 
   const [showCompanyName, setShowCompanyName] = useState(true);
+  const [showPhone, setShowPhone] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [agreed, setAgreed] = useState(false);
 
@@ -259,6 +372,10 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
     await new Promise((resolve) => setTimeout(resolve, 1500));
     router.push(`/opt-in/${token}/success`);
   };
+
+  const displayRegions = formData.regions.length === 0 || formData.regions.length === REGIONS.length
+    ? "All Regions"
+    : formData.regions.join(", ");
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "var(--color-off-white)" }}>
@@ -432,52 +549,21 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
                 </p>
               </div>
 
-              {/* Region */}
+              {/* Regions */}
               <div className="mb-5">
                 <label
                   className="block text-[13px] font-semibold mb-2"
                   style={{ color: "var(--color-navy)", fontFamily: "var(--font-body)" }}
                 >
-                  Region
+                  Regions
                 </label>
-                <div style={{ position: "relative" }}>
-                  <select
-                    value={formData.region}
-                    onChange={(e) => setFormData({ ...formData, region: e.target.value })}
-                    required
-                    style={{
-                      width: "100%",
-                      padding: "12px 40px 12px 16px",
-                      borderRadius: "var(--radius-md)",
-                      border: "1.5px solid var(--color-mid-gray)",
-                      fontSize: "15px",
-                      fontFamily: "var(--font-body)",
-                      color: "var(--color-navy)",
-                      background: "white",
-                      appearance: "none",
-                      cursor: "pointer",
-                      outline: "none",
-                    }}
-                    onFocus={(e) => (e.target.style.borderColor = "var(--color-gold)")}
-                    onBlur={(e) => (e.target.style.borderColor = "var(--color-mid-gray)")}
-                  >
-                    {REGIONS.map((r) => (
-                      <option key={r} value={r}>{r}</option>
-                    ))}
-                  </select>
-                  <ChevronDown
-                    style={{
-                      position: "absolute",
-                      right: "14px",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      width: "16px",
-                      height: "16px",
-                      color: "var(--color-text-secondary)",
-                      pointerEvents: "none",
-                    }}
-                  />
-                </div>
+                <MultiSelectRegions
+                  values={formData.regions}
+                  onChange={(v) => setFormData({ ...formData, regions: v })}
+                />
+                <p className="text-[12px] mt-2" style={{ color: "var(--color-text-secondary)", fontFamily: "var(--font-body)" }}>
+                  Select one or more regions, or leave empty for All Regions
+                </p>
               </div>
 
               {/* Specialisations */}
@@ -539,6 +625,49 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
                     Show in directory listing
                   </span>
                   <Toggle checked={showCompanyName} onChange={setShowCompanyName} />
+                </div>
+              </div>
+
+              {/* Phone number */}
+              <div
+                className="mb-7 p-5"
+                style={{
+                  background: "var(--color-light-gray)",
+                  borderRadius: "var(--radius-md)",
+                  border: "1px solid transparent",
+                }}
+              >
+                <label
+                  className="block text-[13px] font-semibold mb-2"
+                  style={{ color: "var(--color-navy)", fontFamily: "var(--font-body)" }}
+                >
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  placeholder="e.g. +27 82 123 4567"
+                  style={{
+                    width: "100%",
+                    padding: "12px 16px",
+                    borderRadius: "var(--radius-md)",
+                    border: "1.5px solid var(--color-mid-gray)",
+                    fontSize: "15px",
+                    fontFamily: "var(--font-body)",
+                    color: "var(--color-navy)",
+                    background: "white",
+                    outline: "none",
+                    transition: "border-color 0.15s",
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--color-gold)")}
+                  onBlur={(e) => (e.target.style.borderColor = "var(--color-mid-gray)")}
+                />
+                <div className="mt-4 flex items-center justify-between">
+                  <span className="text-[13px]" style={{ color: "var(--color-text-secondary)", fontFamily: "var(--font-body)" }}>
+                    Show in directory listing
+                  </span>
+                  <Toggle checked={showPhone} onChange={setShowPhone} />
                 </div>
               </div>
 
@@ -675,7 +804,7 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
                   lineHeight: 1.6,
                 }}
               >
-                Your name, region, specialisations, and PR number will always be shown.
+                Your name, region(s), specialisations, and PR number will always be shown.
                 You can update your information at any time.
               </p>
             </form>

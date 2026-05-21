@@ -51,20 +51,20 @@ const SECTIONS: Section[] = [
     items: [
       "Your full name as registered with SAIT",
       "Your SAIT PR (Practitioner Registration) Number",
-      "Your selected region (province)",
+      "Your selected region(s) (province)",
       "Your selected area(s) of specialisation",
     ],
-    note: "Your company/business name will only be shown if you choose to include it.",
+    note: "Your company/business name and phone number will only be shown if you choose to include them.",
   },
   {
     num: "04",
     title: "What We Do Not Display",
     body: (
       <p>
-        SAIT will <strong>never</strong> display your personal email address, phone number,
-        home address, or financial information. The directory provides only the information
-        necessary for prospective clients to verify your credentials and initiate contact —
-        you control how that contact is made.
+        SAIT will <strong>never</strong> display your personal email address, home address,
+        or financial information. The directory provides only the information necessary for
+        prospective clients to verify your credentials and initiate contact — you control
+        how that contact is made. You may optionally choose to display your phone number.
       </p>
     ),
   },

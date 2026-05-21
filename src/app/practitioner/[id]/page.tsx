@@ -17,6 +17,7 @@ import {
   Mail,
   Send,
   Shield,
+  Phone,
 } from "lucide-react";
 
 export default function PractitionerPage() {
@@ -115,6 +116,12 @@ export default function PractitionerPage() {
     );
   }
 
+  const practitionerRegions = !practitioner.regions ||
+    practitioner.regions.length === 0 ||
+    practitioner.regions.length === 9
+    ? "All Regions"
+    : practitioner.regions.join(", ");
+
   return (
     <div className="min-h-screen flex flex-col bg-[var(--color-off-white)]">
       {/* Header */}
@@ -177,13 +184,30 @@ export default function PractitionerPage() {
                   </div>
                   <div>
                     <div className="text-xs text-[var(--color-text-secondary)] uppercase tracking-wider">
-                      Region
+                      Region{practitioner.regions && practitioner.regions.length > 1 ? "s" : ""}
                     </div>
                     <div className="font-medium text-[var(--color-navy)]">
-                      {practitioner.region}
+                      {practitionerRegions}
                     </div>
                   </div>
                 </div>
+
+                {/* Phone - only show if exists */}
+                {practitioner.phone && (
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-[var(--radius-md)] bg-[var(--color-light-gray)] flex items-center justify-center">
+                      <Phone className="w-5 h-5 text-[var(--color-text-secondary)]" />
+                    </div>
+                    <div>
+                      <div className="text-xs text-[var(--color-text-secondary)] uppercase tracking-wider">
+                        Phone
+                      </div>
+                      <div className="font-medium text-[var(--color-navy)]">
+                        {practitioner.phone}
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-[var(--radius-md)] bg-[var(--color-light-gray)] flex items-center justify-center">

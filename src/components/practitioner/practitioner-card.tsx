@@ -3,8 +3,9 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { MapPin, Building2, FileCheck } from "lucide-react";
+import { MapPin, Building2, FileCheck, Phone } from "lucide-react";
 import type { Practitioner } from "@/types";
+import { REGIONS } from "@/types";
 
 interface PractitionerCardProps {
   practitioner: Practitioner;
@@ -17,6 +18,14 @@ export function PractitionerCard({
   onClick,
   className,
 }: PractitionerCardProps) {
+  const displayRegions = !practitioner.regions ||
+    practitioner.regions.length === 0 ||
+    practitioner.regions.length === REGIONS.length
+    ? "All Regions"
+    : practitioner.regions.length === 1
+    ? practitioner.regions[0]
+    : `${practitioner.regions.length} regions`;
+
   return (
     <Card
       hover
@@ -47,8 +56,16 @@ export function PractitionerCard({
         {/* Region */}
         <div className="flex items-center gap-2 text-[var(--color-text-secondary)]">
           <MapPin className="w-4 h-4 flex-shrink-0" />
-          <span>{practitioner.region}</span>
+          <span>{displayRegions}</span>
         </div>
+
+        {/* Phone - only show if exists */}
+        {practitioner.phone && (
+          <div className="flex items-center gap-2 text-[var(--color-text-secondary)]">
+            <Phone className="w-4 h-4 flex-shrink-0" />
+            <span>{practitioner.phone}</span>
+          </div>
+        )}
 
         {/* Specialisation */}
         {practitioner.specialisation.length > 0 && (
