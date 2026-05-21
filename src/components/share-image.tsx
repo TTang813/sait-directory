@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import { MapPin, Building2, FileCheck, Phone } from "lucide-react";
+import { REGIONS } from "@/types";
 
 interface ShareImageData {
   fullName: string;
@@ -30,7 +31,7 @@ export function ShareImage({
 }: ShareImageData) {
   const initials = fullName.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
 
-  const displayRegions = !regions || regions.length === 0 || regions.length === 9
+  const displayRegions = !regions || regions.length === 0 || regions.length === REGIONS.length
     ? "All Regions"
     : regions.join(", ");
 

@@ -15,11 +15,11 @@ const ALL_SPECIALISATIONS = Object.entries(SPECIALISATION_CATEGORIES).flatMap(
 
 const DB_VALUES = {
   fullName: "Jane Smith",
-  regions: ["Gauteng"],
-  specialisation: ["Corporate Income Tax", "VAT"],
-  companyName: "Smith Tax Consultants",
+  regions: [],
+  specialisation: [],
+  companyName: "",
   prNumber: "PR-2024-12345",
-  phone: "+27 82 123 4567",
+  phone: "",
 };
 
 function MultiSelect({
@@ -353,7 +353,13 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
   const { token } = use(params);
   const router = useRouter();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    fullName: string;
+    regions: string[];
+    specialisation: string[];
+    companyName: string;
+    phone: string;
+  }>({
     fullName: DB_VALUES.fullName,
     regions: [...DB_VALUES.regions],
     specialisation: [...DB_VALUES.specialisation],
@@ -369,6 +375,17 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    // Save form data to sessionStorage for Step 3 to read
+    sessionStorage.setItem("optInData", JSON.stringify({
+      fullName: formData.fullName,
+      regions: formData.regions,
+      specialisation: formData.specialisation,
+      companyName: formData.companyName,
+      showCompany: showCompanyName,
+      phone: formData.phone,
+      showPhone,
+      prNumber: DB_VALUES.prNumber,
+    }));
     await new Promise((resolve) => setTimeout(resolve, 1500));
     router.push(`/opt-in/${token}/success`);
   };

@@ -2,13 +2,14 @@
 
 import { use } from "react";
 import { useRouter } from "next/navigation";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useReactToPrint } from "react-to-print";
 import Image from "next/image";
 import { Logo } from "@/components/ui/logo";
 import { Card } from "@/components/ui/card";
 import { CheckCircle, MapPin, Building2, FileCheck, Download, Phone } from "lucide-react";
 import { ShareImage } from "@/components/share-image";
+import { REGIONS } from "@/types";
 
 function LinkedInIcon({ className }: { className?: string }) {
   return (
@@ -41,7 +42,7 @@ function ListingCard({
 }) {
   const initials = fullName.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
 
-  const displayRegions = !regions || regions.length === 0 || regions.length === 9
+  const displayRegions = !regions || regions.length === 0 || regions.length === REGIONS.length
     ? "All Regions"
     : regions.join(", ");
 
@@ -186,15 +187,35 @@ export default function OptInSuccessPage({ params }: { params: Promise<{ token: 
   const router = useRouter();
   const shareImageRef = useRef<HTMLDivElement>(null);
 
-  const mockData = {
+  // Read form data from sessionStorage (set by Step 2)
+  const [formData, setFormData] = useState<{
+    fullName: string;
+    regions: string[];
+    specialisation: string[];
+    companyName: string;
+    showCompany: boolean;
+    phone: string;
+    showPhone: boolean;
+    prNumber: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const saved = sessionStorage.getItem("optInData");
+    if (saved) {
+      setFormData(JSON.parse(saved));
+    }
+  }, []);
+
+  // Fallback defaults if sessionStorage is empty (direct URL access)
+  const mockData = formData || {
     fullName: "Jane Smith",
     regions: ["Gauteng"],
-    specialisation: ["Corporate Income Tax", "VAT"],
-    companyName: "Smith Tax Consultants",
-    prNumber: "PR-2024-12345",
-    showCompany: true,
-    phone: "+27 82 123 4567",
+    specialisation: [],
+    companyName: "",
+    showCompany: false,
+    phone: "",
     showPhone: false,
+    prNumber: "PR-2024-12345",
   };
 
   const fullShareUrl = `https://directory.thesait.org.za/practitioner/${mockData.prNumber}`;
