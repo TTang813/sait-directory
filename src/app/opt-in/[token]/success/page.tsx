@@ -93,7 +93,8 @@ function ListingCard({
       </div>
 
       <div style={{ padding: "22px 24px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "18px" }}>
+        {/* Header: Avatar + Name + Member */}
+        <div style={{ display: "flex", alignItems: "flex-start", gap: "14px", marginBottom: "16px" }}>
           <div
             style={{
               width: "54px",
@@ -111,8 +112,8 @@ function ListingCard({
           >
             {initials}
           </div>
-          <div>
-            <div style={{ fontSize: "18px", fontWeight: 700, color: "#ffffff", lineHeight: 1.2, marginBottom: "5px" }}>
+          <div style={{ paddingTop: "4px" }}>
+            <div style={{ fontSize: "18px", fontWeight: 700, color: "#ffffff", lineHeight: 1.2, marginBottom: "6px" }}>
               {fullName}
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "11px", color: "rgba(226,191,41,0.85)" }}>
@@ -122,7 +123,14 @@ function ListingCard({
           </div>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "14px" }}>
+        {/* Info rows: all aligned with consistent icon+text, offset to match name alignment */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "14px", paddingLeft: "68px" }}>
+          {showCompany && companyName && (
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <Building2 style={{ width: "13px", height: "13px", color: "rgba(255,255,255,0.38)", flexShrink: 0 }} />
+              <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)" }}>{companyName}</span>
+            </div>
+          )}
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <MapPin style={{ width: "13px", height: "13px", color: "rgba(255,255,255,0.38)", flexShrink: 0 }} />
             <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)" }}>{displayRegions}</span>
@@ -133,16 +141,10 @@ function ListingCard({
               <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)" }}>{phone}</span>
             </div>
           )}
-          {showCompany && companyName && (
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <Building2 style={{ width: "13px", height: "13px", color: "rgba(255,255,255,0.38)", flexShrink: 0 }} />
-              <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)" }}>{companyName}</span>
-            </div>
-          )}
         </div>
 
         {specialisation.length > 0 && (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", marginBottom: "16px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", marginBottom: "16px", paddingLeft: "68px" }}>
             {specialisation.map((spec) => (
               <span
                 key={spec}
@@ -167,6 +169,7 @@ function ListingCard({
             marginTop: "14px",
             paddingTop: "14px",
             borderTop: "1px solid rgba(255,255,255,0.07)",
+            paddingLeft: "68px",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
