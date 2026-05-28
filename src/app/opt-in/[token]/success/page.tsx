@@ -21,21 +21,17 @@ function LinkedInIcon({ className }: { className?: string }) {
 
 function ListingCard({
   fullName,
-  region,
   regions,
   specialisation,
   companyName,
-  prNumber,
   showCompany,
   phone,
   showPhone,
 }: {
   fullName: string;
-  region: string;
   regions?: string[];
   specialisation: string[];
   companyName: string;
-  prNumber: string;
   showCompany: boolean;
   phone?: string;
   showPhone?: boolean;
@@ -164,22 +160,7 @@ function ListingCard({
           </div>
         )}
 
-        <div
-          style={{
-            marginTop: "14px",
-            paddingTop: "14px",
-            borderTop: "1px solid rgba(255,255,255,0.07)",
-            paddingLeft: "68px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)" }}>PR Number</span>
-          <span style={{ fontSize: "11px", fontFamily: "Courier New, monospace", color: "rgba(255,255,255,0.45)" }}>
-            {prNumber}
-          </span>
-        </div>
+        <div style={{ marginTop: "8px", paddingLeft: "68px" }} />
       </div>
     </div>
   );
@@ -274,11 +255,9 @@ export default function OptInSuccessPage({ params }: { params: Promise<{ token: 
       >
         <ShareImage
           fullName={mockData.fullName}
-          region={mockData.regions?.[0] ?? "Gauteng"}
           regions={mockData.regions}
           specialisation={mockData.specialisation}
           companyName={mockData.companyName}
-          prNumber={mockData.prNumber}
           showCompany={mockData.showCompany}
           directoryUrl={fullShareUrl}
           phone={mockData.phone}
@@ -336,11 +315,9 @@ export default function OptInSuccessPage({ params }: { params: Promise<{ token: 
           <div className="flex justify-center mb-8">
             <ListingCard
               fullName={mockData.fullName}
-              region={mockData.regions?.[0] ?? "Gauteng"}
               regions={mockData.regions}
               specialisation={mockData.specialisation}
               companyName={mockData.companyName}
-              prNumber={mockData.prNumber}
               showCompany={mockData.showCompany}
               phone={mockData.phone}
               showPhone={mockData.showPhone}

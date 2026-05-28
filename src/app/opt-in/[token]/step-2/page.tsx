@@ -16,18 +16,33 @@ const ALL_SPECIALISATIONS = Object.entries(SPECIALISATION_CATEGORIES).flatMap(
 const DB_VALUES = {
   fullName: "Jane Smith",
   regions: ["Gauteng"],
+  towns: ["Johannesburg"],
   specialisation: [],
   companyName: "Smith Tax Consultants",
   prNumber: "PR-2024-12345",
   phone: "+27 82 123 4567",
 };
 
+const REGION_TOWNS: Record<string, string[]> = {
+  "Eastern Cape": ["Gqeberha", "East London", "Mthatha"],
+  "Free State": ["Bloemfontein", "Welkom", "Bethlehem"],
+  Gauteng: ["Johannesburg", "Pretoria", "Sandton", "Midrand"],
+  "KwaZulu-Natal": ["Durban", "Pietermaritzburg", "Richards Bay"],
+  Limpopo: ["Polokwane", "Tzaneen", "Thohoyandou"],
+  Mpumalanga: ["Nelspruit", "Witbank", "Secunda"],
+  "Northern Cape": ["Kimberley", "Upington", "Springbok"],
+  "North West": ["Rustenburg", "Mahikeng", "Klerksdorp"],
+  "Western Cape": ["Cape Town", "Stellenbosch", "George"],
+};
+
 function MultiSelect({
   values,
   onChange,
+  maxSelections = 3,
 }: {
   values: string[];
   onChange: (v: string[]) => void;
+  maxSelections?: number;
 }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -42,6 +57,7 @@ function MultiSelect({
     if (values.includes(val)) {
       onChange(values.filter((v) => v !== val));
     } else {
+      if (values.length >= maxSelections) return;
       onChange([...values, val]);
     }
   };
@@ -196,6 +212,170 @@ function MultiSelect({
       {open && (
         <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
       )}
+      {values.length >= maxSelections && (
+        <p className="text-[12px] mt-2" style={{ color: "var(--color-text-secondary)", fontFamily: "var(--font-body)" }}>
+          Maximum {maxSelections} specialisations can be selected.
+        </p>
+      )}
+    </div>
+  );
+}
+
+function MultiSelectTowns({
+  options,
+  values,
+  onChange,
+  disabled,
+}: {
+  options: string[];
+  values: string[];
+  onChange: (v: string[]) => void;
+  disabled?: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const MAX_TOWNS = 3;
+
+  const filtered = options.filter((town) =>
+    town.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const toggle = (val: string) => {
+    if (values.includes(val)) {
+      onChange(values.filter((v) => v !== val));
+      return;
+    }
+    if (values.length >= MAX_TOWNS) return;
+    onChange([...values, val]);
+  };
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={() => !disabled && setOpen(!open)}
+        className="w-full flex items-center justify-between py-3 px-4 bg-white border border-[var(--color-mid-gray)] text-[15px] transition-all focus:outline-none focus:border-[var(--color-gold)] focus:shadow-[0_0_0_3px_rgba(226,191,41,0.12)] disabled:opacity-60 disabled:cursor-not-allowed"
+        style={{
+          borderRadius: "var(--radius-md)",
+          fontFamily: "var(--font-body)",
+          color: values.length === 0 ? "var(--color-text-secondary)" : "var(--color-navy)",
+        }}
+      >
+        <div className="flex flex-wrap gap-2 flex-1 min-w-0">
+          {values.length === 0 ? (
+            <span>Select town(s)</span>
+          ) : (
+            values.map((v) => (
+              <span
+                key={v}
+                className="inline-flex items-center gap-1.5"
+                style={{
+                  background: "rgba(226,191,41,0.1)",
+                  color: "var(--color-navy)",
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  padding: "4px 10px",
+                  borderRadius: "var(--radius-pill)",
+                  border: "1px solid rgba(226,191,41,0.3)",
+                  fontFamily: "var(--font-body)",
+                }}
+              >
+                {v}
+                <span
+                  role="button"
+                  tabIndex={0}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggle(v);
+                  }}
+                  onKeyDown={(e) => e.key === "Enter" && toggle(v)}
+                  className="hover:opacity-70 cursor-pointer"
+                  style={{ lineHeight: 1 }}
+                >
+                  <X style={{ width: "12px", height: "12px" }} />
+                </span>
+              </span>
+            ))
+          )}
+        </div>
+        <ChevronDown
+          style={{
+            width: "16px",
+            height: "16px",
+            color: "var(--color-text-secondary)",
+            flexShrink: 0,
+            marginLeft: "8px",
+            transform: open ? "rotate(180deg)" : "none",
+            transition: "transform 0.2s",
+          }}
+        />
+      </button>
+
+      {open && (
+        <div
+          className="absolute z-50 mt-1 w-full bg-white border border-[var(--color-mid-gray)]"
+          style={{
+            borderRadius: "var(--radius-md)",
+            boxShadow: "var(--shadow-lg)",
+            maxHeight: "260px",
+            overflowY: "auto",
+          }}
+        >
+          <div
+            className="sticky top-0 bg-white p-2"
+            style={{ borderBottom: "1px solid var(--color-light-gray)" }}
+          >
+            <input
+              type="text"
+              placeholder="Search towns..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full text-sm px-3 py-2"
+              style={{
+                border: "1px solid var(--color-light-gray)",
+                borderRadius: "var(--radius-sm)",
+                fontFamily: "var(--font-body)",
+                color: "var(--color-navy)",
+                outline: "none",
+              }}
+            />
+          </div>
+          {filtered.map((town) => {
+            const selected = values.includes(town);
+            return (
+              <button
+                key={town}
+                type="button"
+                onClick={() => toggle(town)}
+                className="w-full flex items-center justify-between px-4 py-3 text-sm text-left transition-colors"
+                style={{
+                  fontFamily: "var(--font-body)",
+                  color: "var(--color-navy)",
+                  background: selected ? "rgba(226,191,41,0.06)" : "transparent",
+                  borderBottom: "1px solid var(--color-light-gray)",
+                }}
+              >
+                <span>{town}</span>
+                {selected && (
+                  <Check style={{ width: "14px", height: "14px", color: "var(--color-gold)" }} />
+                )}
+              </button>
+            );
+          })}
+          {filtered.length === 0 && (
+            <div className="px-4 py-8 text-sm text-center" style={{ color: "var(--color-text-secondary)", fontFamily: "var(--font-body)" }}>
+              No towns available for selected region(s)
+            </div>
+          )}
+        </div>
+      )}
+      {open && <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />}
+      {values.length >= MAX_TOWNS && (
+        <p className="text-[12px] mt-2" style={{ color: "var(--color-text-secondary)", fontFamily: "var(--font-body)" }}>
+          Maximum {MAX_TOWNS} towns can be selected.
+        </p>
+      )}
     </div>
   );
 }
@@ -212,6 +392,8 @@ function MultiSelectRegions({
   const toggle = (val: string) => {
     const newValues = values.includes(val)
       ? values.filter((v) => v !== val)
+      : values.length >= 3
+      ? values
       : [...values, val];
     onChange(newValues);
   };
@@ -297,25 +479,6 @@ function MultiSelectRegions({
           >
             Regions
           </div>
-          <button
-            type="button"
-            onClick={() => onChange([])}
-            className="w-full flex items-center justify-between px-4 py-3 text-sm text-left transition-colors"
-            style={{
-              fontFamily: "var(--font-body)",
-              color: values.length === 0 || values.length === REGIONS.length ? "var(--color-navy)" : "var(--color-text-secondary)",
-              fontWeight: values.length === 0 || values.length === REGIONS.length ? 600 : 400,
-              background: values.length === 0 || values.length === REGIONS.length ? "rgba(226,191,41,0.06)" : "transparent",
-              borderBottom: "1px solid var(--color-light-gray)",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-light-gray)")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = values.length === 0 || values.length === REGIONS.length ? "rgba(226,191,41,0.06)" : "transparent")}
-          >
-            <span>All Regions</span>
-            {(values.length === 0 || values.length === REGIONS.length) && (
-              <Check style={{ width: "14px", height: "14px", color: "var(--color-gold)" }} />
-            )}
-          </button>
           {REGIONS.map((region) => {
             const selected = values.includes(region);
             return (
@@ -345,6 +508,11 @@ function MultiSelectRegions({
 
       {open && (
         <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+      )}
+      {values.length >= 3 && (
+        <p className="text-[12px] mt-2" style={{ color: "var(--color-text-secondary)", fontFamily: "var(--font-body)" }}>
+          Maximum 3 regions can be selected.
+        </p>
       )}
     </div>
   );
@@ -394,12 +562,14 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
   const [formData, setFormData] = useState<{
     fullName: string;
     regions: string[];
+    towns: string[];
     specialisation: string[];
     companyName: string;
     phone: string;
   }>({
     fullName: DB_VALUES.fullName,
     regions: [...DB_VALUES.regions],
+    towns: [...DB_VALUES.towns],
     specialisation: [...DB_VALUES.specialisation],
     companyName: DB_VALUES.companyName,
     phone: DB_VALUES.phone,
@@ -417,6 +587,7 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
     sessionStorage.setItem("optInData", JSON.stringify({
       fullName: formData.fullName,
       regions: formData.regions,
+      towns: formData.towns,
       specialisation: formData.specialisation,
       companyName: formData.companyName,
       showCompany: showCompanyName,
@@ -428,9 +599,8 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
     router.push(`/opt-in/${token}/success`);
   };
 
-  const displayRegions = formData.regions.length === 0 || formData.regions.length === REGIONS.length
-    ? "All Regions"
-    : formData.regions.join(", ");
+  const availableTowns = formData.regions.flatMap((region) => REGION_TOWNS[region] ?? []);
+  const dedupedAvailableTowns = Array.from(new Set(availableTowns));
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "var(--color-off-white)" }}>
@@ -610,14 +780,43 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
                   className="block text-[13px] font-semibold mb-2"
                   style={{ color: "var(--color-navy)", fontFamily: "var(--font-body)" }}
                 >
-                  Regions
+                  In which region do you mostly operate?
                 </label>
                 <MultiSelectRegions
                   values={formData.regions}
-                  onChange={(v) => setFormData({ ...formData, regions: v })}
+                  onChange={(v) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      regions: v,
+                      towns: prev.towns.filter((town) =>
+                        v.some((region) => (REGION_TOWNS[region] ?? []).includes(town))
+                      ),
+                    }))
+                  }
                 />
                 <p className="text-[12px] mt-2" style={{ color: "var(--color-text-secondary)", fontFamily: "var(--font-body)" }}>
-                  Select one or more regions, or leave empty for All Regions
+                  Select up to 3 regions
+                </p>
+              </div>
+
+              {/* Towns */}
+              <div className="mb-5">
+                <label
+                  className="block text-[13px] font-semibold mb-2"
+                  style={{ color: "var(--color-navy)", fontFamily: "var(--font-body)" }}
+                >
+                  Town / City (based on selected region)
+                </label>
+                <MultiSelectTowns
+                  options={dedupedAvailableTowns}
+                  values={formData.towns}
+                  onChange={(v) => setFormData({ ...formData, towns: v })}
+                  disabled={formData.regions.length === 0}
+                />
+                <p className="text-[12px] mt-2" style={{ color: "var(--color-text-secondary)", fontFamily: "var(--font-body)" }}>
+                  {formData.regions.length === 0
+                    ? "Select a region first to load towns"
+                    : "Select up to 3 towns"}
                 </p>
               </div>
 
@@ -636,7 +835,7 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
                 <p className="text-[12px] mt-2" style={{ color: "var(--color-text-secondary)", fontFamily: "var(--font-body)" }}>
                   {formData.specialisation.length === 0
                     ? "Select at least one specialisation"
-                    : `${formData.specialisation.length} selected`}
+                    : `${formData.specialisation.length} selected (max 3)`}
                 </p>
               </div>
 
@@ -859,7 +1058,7 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
                   lineHeight: 1.6,
                 }}
               >
-                Your name, region(s), specialisations, and PR number will always be shown.
+                Your name, region(s), town(s), and specialisations will always be shown.
                 You can update your information at any time.
               </p>
             </form>

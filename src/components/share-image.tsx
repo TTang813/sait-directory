@@ -6,11 +6,9 @@ import { REGIONS } from "@/types";
 
 interface ShareImageData {
   fullName: string;
-  region: string;
   regions?: string[];
   specialisation: string[];
   companyName: string;
-  prNumber: string;
   showCompany: boolean;
   directoryUrl: string;
   phone?: string;
@@ -19,11 +17,9 @@ interface ShareImageData {
 
 export function ShareImage({
   fullName,
-  region,
   regions,
   specialisation,
   companyName,
-  prNumber,
   showCompany,
   directoryUrl,
   phone,
@@ -240,30 +236,7 @@ export function ShareImage({
               </div>
             )}
 
-            {/* Bottom: PR Number */}
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "auto" }}>
-              <span
-                style={{
-                  fontSize: "10px",
-                  fontWeight: 700,
-                  color: "#9CA3AF",
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                }}
-              >
-                PR No.
-              </span>
-              <span
-                style={{
-                  fontSize: "11px",
-                  fontFamily: "Courier New, monospace",
-                  color: "#6B7280",
-                  letterSpacing: "0.08em",
-                }}
-              >
-                {prNumber}
-              </span>
-            </div>
+            <div style={{ marginTop: "auto" }} />
           </div>
 
           {/* ── Right section: CTA ── */}
