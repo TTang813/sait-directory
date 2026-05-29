@@ -85,54 +85,84 @@ export default function SearchPage() {
         </div>
       </header>
 
-      {/* Search Section */}
-      <section className="bg-[var(--color-navy)] py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-h1 text-white mb-2">Find a Practitioner</h1>
-          <p className="text-white/70 mb-8">
-            Search our directory of verified SAIT-certified tax professionals
-          </p>
+      {/* Hero + Search — P2-style background image with overlay */}
+      <section className="relative overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url(/workplace-hero.png)" }}
+          aria-hidden
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(31, 33, 46, 0.72) 0%, rgba(31, 33, 46, 0.82) 45%, rgba(31, 33, 46, 0.9) 100%)",
+          }}
+          aria-hidden
+        />
 
-          {/* Filters — always visible */}
-          <div className="p-6 bg-white/5 rounded-[var(--radius-lg)] border border-white/10">
-            <div className="grid md:grid-cols-2 gap-4">
-              <Select
-                label="Region"
-                dark
-                placeholder="All regions"
-                value={region}
-                onChange={(e) => setRegion(e.target.value)}
-                options={[
-                  { value: "", label: "All regions" },
-                  ...REGIONS.map((r) => ({ value: r, label: r })),
-                ]}
-              />
+        <div className="relative z-10 py-14 md:py-20 lg:py-24">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1
+              className="text-white mb-4 font-bold tracking-tight"
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: "clamp(2rem, 5vw, 3rem)",
+                lineHeight: 1.15,
+              }}
+            >
+              Find a Practitioner
+            </h1>
+            <p
+              className="text-white/80 mb-10 md:mb-12 max-w-2xl mx-auto leading-relaxed"
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: "clamp(0.95rem, 2vw, 1.125rem)",
+              }}
+            >
+              Search our directory of verified SAIT-certified tax professionals
+            </p>
 
-              <Select
-                label="Specialisation"
-                dark
-                placeholder="All specialisations"
-                value={selectedSpecs[0] || ""}
-                onChange={(e) =>
-                  setSelectedSpecs(e.target.value ? [e.target.value] : [])
-                }
-                options={ALL_SPECIALISATIONS}
-              />
-            </div>
+            <div className="text-left p-6 md:p-8 rounded-[var(--radius-lg)] border border-white/12 bg-white/[0.06] backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
+              <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+                <Select
+                  label="Region"
+                  dark
+                  placeholder="All regions"
+                  value={region}
+                  onChange={(e) => setRegion(e.target.value)}
+                  options={[
+                    { value: "", label: "All regions" },
+                    ...REGIONS.map((r) => ({ value: r, label: r })),
+                  ]}
+                />
 
-            {hasActiveFilters && (
-              <div className="mt-4 flex justify-end">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={clearFilters}
-                  className="text-white/70 hover:text-white hover:bg-white/10"
-                >
-                  <X className="w-4 h-4" />
-                  Clear all filters
-                </Button>
+                <Select
+                  label="Specialisation"
+                  dark
+                  placeholder="Filter by specialisation"
+                  value={selectedSpecs[0] || ""}
+                  onChange={(e) =>
+                    setSelectedSpecs(e.target.value ? [e.target.value] : [])
+                  }
+                  options={ALL_SPECIALISATIONS}
+                />
               </div>
-            )}
+
+              {hasActiveFilters && (
+                <div className="mt-5 flex justify-center md:justify-end">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearFilters}
+                    className="text-white/70 hover:text-white hover:bg-white/10"
+                  >
+                    <X className="w-4 h-4" />
+                    Clear all filters
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>
