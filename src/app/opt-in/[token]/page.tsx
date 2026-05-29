@@ -2,7 +2,6 @@
 
 import { use } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { Logo } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -58,12 +57,22 @@ export default function OptInStep1Page({
             <div className="w-16 h-16 rounded-full bg-[var(--color-gold)]/10 flex items-center justify-center mx-auto mb-6">
               <CheckCircle className="w-8 h-8 text-[var(--color-gold)]" />
             </div>
-            <h1 className="text-h2 text-[var(--color-navy)] mb-3">
+            <h1
+              className="text-[var(--color-navy)] mb-3 font-bold"
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: "clamp(22px, 3vw, 28px)",
+                lineHeight: 1.2,
+              }}
+            >
               Welcome back, {mockMemberName}
             </h1>
-            <p className="text-[var(--color-text-secondary)] max-w-md mx-auto">
+            <p
+              className="text-[var(--color-text-secondary)] max-w-md mx-auto"
+              style={{ fontFamily: "var(--font-body)" }}
+            >
               We&apos;ve verified your identity. You&apos;re ready to complete your
-              directory listing or update your information.
+              directory listing or update certain fields.
             </p>
           </div>
 
@@ -85,10 +94,6 @@ export default function OptInStep1Page({
             Continue
             <ArrowRight className="w-4 h-4" />
           </Button>
-
-          <p className="text-xs text-[var(--color-text-secondary)] mt-4">
-            This link will expire in 7 days from when it was sent.
-          </p>
         </Card>
       </main>
 

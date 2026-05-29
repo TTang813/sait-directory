@@ -15,12 +15,15 @@ const ALL_SPECIALISATIONS = Object.entries(SPECIALISATION_CATEGORIES).flatMap(
 
 const DB_VALUES = {
   fullName: "Jane Smith",
-  regions: ["Gauteng"],
+  displayName: "Jane Smith",
+  locatedRegion: "Gauteng",
+  operatingRegions: ["Gauteng"],
   towns: ["Johannesburg"],
   specialisation: [],
   companyName: "Smith Tax Consultants",
   prNumber: "PR-2024-12345",
   phone: "+27 82 123 4567",
+  email: "jane.smith@example.com",
 };
 
 const REGION_TOWNS: Record<string, string[]> = {
@@ -380,6 +383,85 @@ function MultiSelectTowns({
   );
 }
 
+function SingleSelectRegion({
+  value,
+  onChange,
+  placeholder = "Select region",
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between py-3 px-4 bg-white border border-[var(--color-mid-gray)] text-[15px] transition-all focus:outline-none focus:border-[var(--color-gold)] focus:shadow-[0_0_0_3px_rgba(226,191,41,0.12)]"
+        style={{
+          borderRadius: "var(--radius-md)",
+          fontFamily: "var(--font-body)",
+          color: value ? "var(--color-navy)" : "var(--color-text-secondary)",
+        }}
+      >
+        <span>{value || placeholder}</span>
+        <ChevronDown
+          style={{
+            width: "16px",
+            height: "16px",
+            color: "var(--color-text-secondary)",
+            flexShrink: 0,
+            transform: open ? "rotate(180deg)" : "none",
+            transition: "transform 0.2s",
+          }}
+        />
+      </button>
+
+      {open && (
+        <div
+          className="absolute z-50 mt-1 w-full bg-white border border-[var(--color-mid-gray)]"
+          style={{
+            borderRadius: "var(--radius-md)",
+            boxShadow: "var(--shadow-lg)",
+            maxHeight: "300px",
+            overflowY: "auto",
+          }}
+        >
+          {REGIONS.map((region) => {
+            const selected = value === region;
+            return (
+              <button
+                key={region}
+                type="button"
+                onClick={() => {
+                  onChange(region);
+                  setOpen(false);
+                }}
+                className="w-full flex items-center justify-between px-4 py-3 text-sm text-left transition-colors"
+                style={{
+                  fontFamily: "var(--font-body)",
+                  color: "var(--color-navy)",
+                  background: selected ? "rgba(226,191,41,0.06)" : "transparent",
+                  borderBottom: "1px solid var(--color-light-gray)",
+                }}
+              >
+                <span>{region}</span>
+                {selected && (
+                  <Check style={{ width: "14px", height: "14px", color: "var(--color-gold)" }} />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {open && <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />}
+    </div>
+  );
+}
+
 function MultiSelectRegions({
   values,
   onChange,
@@ -560,46 +642,81 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
   const router = useRouter();
 
   const [formData, setFormData] = useState<{
-    fullName: string;
-    regions: string[];
+    displayName: string;
+    locatedRegion: string;
+    operatingRegions: string[];
     towns: string[];
     specialisation: string[];
     companyName: string;
     phone: string;
+    email: string;
   }>({
-    fullName: DB_VALUES.fullName,
-    regions: [...DB_VALUES.regions],
+    displayName: DB_VALUES.displayName,
+    locatedRegion: DB_VALUES.locatedRegion,
+    operatingRegions: [...DB_VALUES.operatingRegions],
     towns: [...DB_VALUES.towns],
     specialisation: [...DB_VALUES.specialisation],
     companyName: DB_VALUES.companyName,
     phone: DB_VALUES.phone,
+    email: DB_VALUES.email,
   });
 
   const [showCompanyName, setShowCompanyName] = useState(true);
-  const [showPhone, setShowPhone] = useState(false);
+  const [showPRInDirectory, setShowPRInDirectory] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [agreed, setAgreed] = useState(false);
+
+  const readOnlyInputStyle = {
+    width: "100%",
+    padding: "12px 16px",
+    borderRadius: "var(--radius-md)",
+    border: "1.5px solid var(--color-light-gray)",
+    fontSize: "15px",
+    fontFamily: "var(--font-body)",
+    color: "var(--color-text-secondary)",
+    background: "var(--color-light-gray)",
+    opacity: 0.7,
+    cursor: "not-allowed" as const,
+  };
+
+  const editableInputStyle = {
+    width: "100%",
+    padding: "12px 16px",
+    borderRadius: "var(--radius-md)",
+    border: "1.5px solid var(--color-mid-gray)",
+    fontSize: "15px",
+    fontFamily: "var(--font-body)",
+    color: "var(--color-navy)",
+    background: "white",
+    outline: "none",
+    transition: "border-color 0.15s",
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Save form data to sessionStorage for Step 3 to read
     sessionStorage.setItem("optInData", JSON.stringify({
-      fullName: formData.fullName,
-      regions: formData.regions,
+      fullName: DB_VALUES.fullName,
+      displayName: formData.displayName,
+      locatedRegion: formData.locatedRegion,
+      operatingRegions: formData.operatingRegions,
+      regions: formData.operatingRegions,
       towns: formData.towns,
       specialisation: formData.specialisation,
       companyName: formData.companyName,
       showCompany: showCompanyName,
       phone: formData.phone,
-      showPhone,
+      email: formData.email,
+      showPRInDirectory,
       prNumber: DB_VALUES.prNumber,
     }));
     await new Promise((resolve) => setTimeout(resolve, 1500));
     router.push(`/opt-in/${token}/success`);
   };
 
-  const availableTowns = formData.regions.flatMap((region) => REGION_TOWNS[region] ?? []);
+  const availableTowns = formData.operatingRegions.flatMap(
+    (region) => REGION_TOWNS[region] ?? []
+  );
   const dedupedAvailableTowns = Array.from(new Set(availableTowns));
 
   return (
@@ -691,7 +808,7 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
             <h1
               className="mb-2"
               style={{
-                fontFamily: "var(--font-display), Georgia, serif",
+                fontFamily: "var(--font-body)",
                 fontSize: "clamp(22px, 3vw, 30px)",
                 fontWeight: 700,
                 color: "var(--color-navy)",
@@ -710,11 +827,11 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
                 lineHeight: 1.6,
               }}
             >
-              Your details are pre-filled from SAIT records. Update anything that needs changing.
+              Your details are pre-filled from SAIT records.
             </p>
 
             <form onSubmit={handleSubmit} style={{ fontFamily: "var(--font-body)" }}>
-              {/* Name */}
+              {/* Full Name — read-only from DB */}
               <div className="mb-5">
                 <label
                   className="block text-[13px] font-semibold mb-2"
@@ -724,28 +841,46 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
                 </label>
                 <input
                   type="text"
-                  value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                  value={DB_VALUES.fullName}
+                  readOnly
+                  style={readOnlyInputStyle}
+                />
+                <p className="text-[11px] mt-1.5" style={{ color: "var(--color-text-secondary)", fontFamily: "var(--font-body)" }}>
+                  Kept as per SAIT membership records. Contact SAIT to correct this field.
+                </p>
+              </div>
+
+              {/* Display Name */}
+              <div className="mb-5">
+                <label
+                  className="block text-[13px] font-semibold mb-2"
+                  style={{ color: "var(--color-navy)", fontFamily: "var(--font-body)" }}
+                >
+                  Display Name
+                </label>
+                <input
+                  type="text"
+                  value={formData.displayName}
+                  onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
                   required
-                  style={{
-                    width: "100%",
-                    padding: "12px 16px",
-                    borderRadius: "var(--radius-md)",
-                    border: "1.5px solid var(--color-mid-gray)",
-                    fontSize: "15px",
-                    fontFamily: "var(--font-body)",
-                    color: "var(--color-navy)",
-                    background: "white",
-                    outline: "none",
-                    transition: "border-color 0.15s",
-                  }}
+                  style={editableInputStyle}
                   onFocus={(e) => (e.target.style.borderColor = "var(--color-gold)")}
                   onBlur={(e) => (e.target.style.borderColor = "var(--color-mid-gray)")}
                 />
+                <p className="text-[11px] mt-1.5" style={{ color: "var(--color-text-secondary)", fontFamily: "var(--font-body)" }}>
+                  Shown in the public directory listing.
+                </p>
               </div>
 
               {/* PR Number */}
-              <div className="mb-5">
+              <div
+                className="mb-5 p-4"
+                style={{
+                  background: "var(--color-light-gray)",
+                  borderRadius: "var(--radius-md)",
+                  border: "1px solid transparent",
+                }}
+              >
                 <label
                   className="block text-[13px] font-semibold mb-2"
                   style={{ color: "var(--color-navy)", fontFamily: "var(--font-body)" }}
@@ -756,25 +891,38 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
                   type="text"
                   value={DB_VALUES.prNumber}
                   readOnly
-                  style={{
-                    width: "100%",
-                    padding: "12px 16px",
-                    borderRadius: "var(--radius-md)",
-                    border: "1.5px solid var(--color-light-gray)",
-                    fontSize: "15px",
-                    fontFamily: "var(--font-body)",
-                    color: "var(--color-text-secondary)",
-                    background: "var(--color-light-gray)",
-                    opacity: 0.7,
-                    cursor: "not-allowed",
-                  }}
+                  style={readOnlyInputStyle}
                 />
-                <p className="text-[11px] mt-1.5" style={{ color: "var(--color-text-secondary)", fontFamily: "var(--font-body)" }}>
+                <p className="text-[11px] mt-1.5 mb-4" style={{ color: "var(--color-text-secondary)", fontFamily: "var(--font-body)" }}>
                   Contact SAIT to correct this field.
                 </p>
+                <div className="flex items-center justify-between gap-3 pt-3 border-t border-[var(--color-mid-gray)]/40">
+                  <span
+                    className="text-[13px] font-semibold"
+                    style={{ color: "var(--color-navy)", fontFamily: "var(--font-body)" }}
+                  >
+                    Display in Public Directory
+                  </span>
+                  <Toggle checked={showPRInDirectory} onChange={setShowPRInDirectory} />
+                </div>
               </div>
 
-              {/* Regions */}
+              {/* Located region — single select */}
+              <div className="mb-5">
+                <label
+                  className="block text-[13px] font-semibold mb-2"
+                  style={{ color: "var(--color-navy)", fontFamily: "var(--font-body)" }}
+                >
+                  In which Region are you located?
+                </label>
+                <SingleSelectRegion
+                  value={formData.locatedRegion}
+                  onChange={(v) => setFormData({ ...formData, locatedRegion: v })}
+                  placeholder="Select your region"
+                />
+              </div>
+
+              {/* Operating regions — up to 3 */}
               <div className="mb-5">
                 <label
                   className="block text-[13px] font-semibold mb-2"
@@ -783,11 +931,11 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
                   In which region do you mostly operate?
                 </label>
                 <MultiSelectRegions
-                  values={formData.regions}
+                  values={formData.operatingRegions}
                   onChange={(v) =>
                     setFormData((prev) => ({
                       ...prev,
-                      regions: v,
+                      operatingRegions: v,
                       towns: prev.towns.filter((town) =>
                         v.some((region) => (REGION_TOWNS[region] ?? []).includes(town))
                       ),
@@ -799,23 +947,23 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
                 </p>
               </div>
 
-              {/* Towns */}
+              {/* Towns — filtered by operating regions */}
               <div className="mb-5">
                 <label
                   className="block text-[13px] font-semibold mb-2"
                   style={{ color: "var(--color-navy)", fontFamily: "var(--font-body)" }}
                 >
-                  Town / City (based on selected region)
+                  Town / City (based on selected operating regions)
                 </label>
                 <MultiSelectTowns
                   options={dedupedAvailableTowns}
                   values={formData.towns}
                   onChange={(v) => setFormData({ ...formData, towns: v })}
-                  disabled={formData.regions.length === 0}
+                  disabled={formData.operatingRegions.length === 0}
                 />
                 <p className="text-[12px] mt-2" style={{ color: "var(--color-text-secondary)", fontFamily: "var(--font-body)" }}>
-                  {formData.regions.length === 0
-                    ? "Select a region first to load towns"
+                  {formData.operatingRegions.length === 0
+                    ? "Select operating region(s) first to load towns"
                     : "Select up to 3 towns"}
                 </p>
               </div>
@@ -859,32 +1007,21 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
                   value={formData.companyName}
                   onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
                   placeholder="Leave blank if not applicable"
-                  style={{
-                    width: "100%",
-                    padding: "12px 16px",
-                    borderRadius: "var(--radius-md)",
-                    border: "1.5px solid var(--color-mid-gray)",
-                    fontSize: "15px",
-                    fontFamily: "var(--font-body)",
-                    color: "var(--color-navy)",
-                    background: "white",
-                    outline: "none",
-                    transition: "border-color 0.15s",
-                  }}
+                  style={editableInputStyle}
                   onFocus={(e) => (e.target.style.borderColor = "var(--color-gold)")}
                   onBlur={(e) => (e.target.style.borderColor = "var(--color-mid-gray)")}
                 />
                 <div className="mt-4 flex items-center justify-between">
-                  <span className="text-[13px]" style={{ color: "var(--color-text-secondary)", fontFamily: "var(--font-body)" }}>
-                    Show in directory listing
+                  <span className="text-[13px] font-semibold" style={{ color: "var(--color-navy)", fontFamily: "var(--font-body)" }}>
+                    Show in Public Directory
                   </span>
                   <Toggle checked={showCompanyName} onChange={setShowCompanyName} />
                 </div>
               </div>
 
-              {/* Phone number */}
+              {/* Phone number — editable, never shown in directory */}
               <div
-                className="mb-7 p-5"
+                className="mb-5 p-5"
                 style={{
                   background: "var(--color-light-gray)",
                   borderRadius: "var(--radius-md)",
@@ -902,27 +1039,43 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   placeholder="e.g. +27 82 123 4567"
-                  style={{
-                    width: "100%",
-                    padding: "12px 16px",
-                    borderRadius: "var(--radius-md)",
-                    border: "1.5px solid var(--color-mid-gray)",
-                    fontSize: "15px",
-                    fontFamily: "var(--font-body)",
-                    color: "var(--color-navy)",
-                    background: "white",
-                    outline: "none",
-                    transition: "border-color 0.15s",
-                  }}
+                  style={editableInputStyle}
                   onFocus={(e) => (e.target.style.borderColor = "var(--color-gold)")}
                   onBlur={(e) => (e.target.style.borderColor = "var(--color-mid-gray)")}
                 />
-                <div className="mt-4 flex items-center justify-between">
-                  <span className="text-[13px]" style={{ color: "var(--color-text-secondary)", fontFamily: "var(--font-body)" }}>
-                    Show in directory listing
-                  </span>
-                  <Toggle checked={showPhone} onChange={setShowPhone} />
-                </div>
+                <p className="text-[11px] mt-2" style={{ color: "var(--color-text-secondary)", fontFamily: "var(--font-body)" }}>
+                  You may update this number, but it will not be shown in the public directory.
+                </p>
+              </div>
+
+              {/* Email — for verification only, not displayed */}
+              <div
+                className="mb-7 p-5"
+                style={{
+                  background: "var(--color-light-gray)",
+                  borderRadius: "var(--radius-md)",
+                  border: "1px solid transparent",
+                }}
+              >
+                <label
+                  className="block text-[13px] font-semibold mb-2"
+                  style={{ color: "var(--color-navy)", fontFamily: "var(--font-body)" }}
+                >
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  placeholder="e.g. name@example.com"
+                  required
+                  style={editableInputStyle}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--color-gold)")}
+                  onBlur={(e) => (e.target.style.borderColor = "var(--color-mid-gray)")}
+                />
+                <p className="text-[11px] mt-2" style={{ color: "var(--color-text-secondary)", fontFamily: "var(--font-body)" }}>
+                  Used to verify your contact details. This will not be displayed in the public directory.
+                </p>
               </div>
 
               {/* Agreement checkbox */}
@@ -1058,8 +1211,8 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
                   lineHeight: 1.6,
                 }}
               >
-                Your name, region(s), town(s), and specialisations will always be shown.
-                You can update your information at any time.
+                Your display name, operating region(s), town(s), and specialisations will always be shown.
+                You can update certain fields at any time.
               </p>
             </form>
           </div>

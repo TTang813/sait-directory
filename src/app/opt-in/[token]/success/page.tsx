@@ -174,12 +174,16 @@ export default function OptInSuccessPage({ params }: { params: Promise<{ token: 
   // Read form data from sessionStorage (set by Step 2)
   const [formData, setFormData] = useState<{
     fullName: string;
+    displayName?: string;
+    operatingRegions?: string[];
     regions: string[];
+    towns?: string[];
     specialisation: string[];
     companyName: string;
     showCompany: boolean;
     phone: string;
-    showPhone: boolean;
+    email?: string;
+    showPRInDirectory?: boolean;
     prNumber: string;
   } | null>(null);
 
@@ -193,14 +197,21 @@ export default function OptInSuccessPage({ params }: { params: Promise<{ token: 
   // Fallback defaults if sessionStorage is empty (direct URL access)
   const mockData = formData || {
     fullName: "Jane Smith",
+    displayName: "Jane Smith",
     regions: ["Gauteng"],
+    operatingRegions: ["Gauteng"],
+    towns: ["Johannesburg"],
     specialisation: [],
     companyName: "Smith Tax Consultants",
     showCompany: true,
     phone: "+27 82 123 4567",
-    showPhone: false,
+    email: "jane.smith@example.com",
+    showPRInDirectory: false,
     prNumber: "PR-2024-12345",
   };
+
+  const cardName = mockData.displayName || mockData.fullName;
+  const cardRegions = mockData.operatingRegions ?? mockData.regions;
 
   const fullShareUrl = `https://directory.thesait.org.za/practitioner/${mockData.prNumber}`;
 
@@ -254,14 +265,12 @@ export default function OptInSuccessPage({ params }: { params: Promise<{ token: 
         }}
       >
         <ShareImage
-          fullName={mockData.fullName}
-          regions={mockData.regions}
+          fullName={cardName}
+          regions={cardRegions}
           specialisation={mockData.specialisation}
           companyName={mockData.companyName}
           showCompany={mockData.showCompany}
           directoryUrl={fullShareUrl}
-          phone={mockData.phone}
-          showPhone={mockData.showPhone}
         />
       </div>
 
@@ -314,13 +323,11 @@ export default function OptInSuccessPage({ params }: { params: Promise<{ token: 
           {/* Card as the focal point */}
           <div className="flex justify-center mb-8">
             <ListingCard
-              fullName={mockData.fullName}
-              regions={mockData.regions}
+              fullName={cardName}
+              regions={cardRegions}
               specialisation={mockData.specialisation}
               companyName={mockData.companyName}
               showCompany={mockData.showCompany}
-              phone={mockData.phone}
-              showPhone={mockData.showPhone}
             />
           </div>
 
