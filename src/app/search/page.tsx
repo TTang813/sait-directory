@@ -4,36 +4,25 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Logo } from "@/components/ui/logo";
-import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import { PractitionerCard } from "@/components/practitioner/practitioner-card";
 import { Badge } from "@/components/ui/badge";
-import {
-  getMockPractitioners,
-} from "@/lib/mock-data";
-import {
-  REGIONS,
-  SPECIALISATION_CATEGORIES,
-} from "@/types";
-import {
-  Search,
-  X,
-  MapPin,
-  SlidersHorizontal,
-  AlertCircle,
-} from "lucide-react";
+import { getMockPractitioners } from "@/lib/mock-data";
+import { REGIONS, SPECIALISATION_CATEGORIES } from "@/types";
+import { Search, X, MapPin, AlertCircle, Shield } from "lucide-react";
 
-// Flatten specialisations for dropdown
 const ALL_SPECIALISATIONS = Object.entries(SPECIALISATION_CATEGORIES).flatMap(
-  ([category, specs]) => specs.map((spec) => ({ value: spec, label: spec }))
+  ([, specs]) => specs.map((spec) => ({ value: spec, label: spec }))
 );
+
+const CAMPAIGN_NAVY = "#0B2C5F";
+const CAMPAIGN_GOLD = "#C8A45D";
 
 export default function SearchPage() {
   const router = useRouter();
 
   const [region, setRegion] = useState("");
   const [selectedSpecs, setSelectedSpecs] = useState<string[]>([]);
-  const [showFilters, setShowFilters] = useState(false);
 
   const practitioners = useMemo(() => {
     return getMockPractitioners({
@@ -50,10 +39,8 @@ export default function SearchPage() {
   const hasActiveFilters = region || selectedSpecs.length > 0;
 
   const getSuggestion = () => {
-    if (practitioners.length === 0 && hasActiveFilters) {
-      if (selectedSpecs.length > 0) {
-        return "Try removing some specialisation filters";
-      }
+    if (practitioners.length === 0 && hasActiveFilters && selectedSpecs.length > 0) {
+      return "Try removing some specialisation filters";
     }
     return null;
   };
@@ -61,22 +48,24 @@ export default function SearchPage() {
   const suggestion = getSuggestion();
 
   return (
-    <div className="min-h-screen flex flex-col bg-[var(--color-off-white)]">
+    <div className="campaign-theme min-h-screen flex flex-col bg-[#F8F9FA]">
       {/* Header */}
-      <header className="bg-white border-b border-[var(--color-light-gray)] sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div className="max-w-[1200px] mx-auto px-6">
           <div className="flex items-center justify-between h-16">
             <Logo width={120} />
-            <nav className="flex items-center gap-4">
+            <nav className="flex items-center gap-6">
               <Link
                 href="/search"
-                className="text-sm font-semibold text-[var(--color-gold)] border-b-2 border-[var(--color-gold)] pb-1"
+                className="text-sm font-semibold pb-0.5 border-b-2"
+                style={{ color: CAMPAIGN_GOLD, borderColor: CAMPAIGN_GOLD }}
               >
                 Find a Practitioner
               </Link>
               <Link
                 href="/verify"
-                className="text-sm font-medium text-[var(--color-navy)] hover:text-[var(--color-gold)] transition-colors"
+                className="text-sm font-medium transition-colors hover:opacity-80"
+                style={{ color: CAMPAIGN_NAVY }}
               >
                 Verify Practitioner
               </Link>
@@ -85,7 +74,7 @@ export default function SearchPage() {
         </div>
       </header>
 
-      {/* Hero + Search — P2-style background image with overlay */}
+      {/* Hero + Search — workplace banner + campaign content */}
       <section className="relative overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -101,33 +90,35 @@ export default function SearchPage() {
           aria-hidden
         />
 
-        <div className="relative z-10 py-14 md:py-20 lg:py-24">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1
-              className="text-white mb-4 font-bold tracking-tight"
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "clamp(2rem, 5vw, 3rem)",
-                lineHeight: 1.15,
-              }}
-            >
-              Find a Practitioner
-            </h1>
-            <p
-              className="text-white/80 mb-10 md:mb-12 max-w-2xl mx-auto leading-relaxed"
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "clamp(0.95rem, 2vw, 1.125rem)",
-              }}
-            >
-              Search our directory of verified SAIT-certified tax professionals
-            </p>
+        <div className="relative z-10 py-16 md:py-24">
+          <div className="max-w-[1200px] mx-auto px-6">
+            <div className="max-w-3xl mx-auto text-center mb-10 md:mb-12">
+              <div
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
+                style={{ backgroundColor: "rgba(200, 164, 93, 0.2)" }}
+              >
+                <Shield className="w-4 h-4" style={{ color: CAMPAIGN_GOLD }} />
+                <span className="text-sm font-medium" style={{ color: CAMPAIGN_GOLD }}>
+                  Use a SAIT Practitioner
+                </span>
+              </div>
 
-            <div className="text-left p-6 md:p-8 rounded-[var(--radius-lg)] border border-white/12 bg-white/[0.06] backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white mb-4">
+                Find a SAIT Practitioner.
+                <br />
+                <span style={{ color: CAMPAIGN_GOLD }}>Get it Right the First Time.</span>
+              </h1>
+
+              <p className="text-lg md:text-xl leading-relaxed text-white/90 max-w-2xl mx-auto">
+                When it comes to tax, accuracy isn&apos;t optional. Search our directory of
+                qualified, regulated, and trusted SAIT professionals.
+              </p>
+            </div>
+
+            <div className="max-w-3xl mx-auto bg-white p-6 md:p-8 rounded-xl border border-gray-200 shadow-lg">
               <div className="grid md:grid-cols-2 gap-4 md:gap-6">
                 <Select
                   label="Region"
-                  dark
                   placeholder="All regions"
                   value={region}
                   onChange={(e) => setRegion(e.target.value)}
@@ -139,8 +130,7 @@ export default function SearchPage() {
 
                 <Select
                   label="Specialisation"
-                  dark
-                  placeholder="Filter by specialisation"
+                  placeholder="All specialisations"
                   value={selectedSpecs[0] || ""}
                   onChange={(e) =>
                     setSelectedSpecs(e.target.value ? [e.target.value] : [])
@@ -151,15 +141,15 @@ export default function SearchPage() {
 
               {hasActiveFilters && (
                 <div className="mt-5 flex justify-center md:justify-end">
-                  <Button
-                    variant="ghost"
-                    size="sm"
+                  <button
+                    type="button"
                     onClick={clearFilters}
-                    className="text-white/70 hover:text-white hover:bg-white/10"
+                    className="inline-flex items-center gap-2 text-sm font-medium transition-colors hover:opacity-80"
+                    style={{ color: CAMPAIGN_NAVY }}
                   >
                     <X className="w-4 h-4" />
                     Clear all filters
-                  </Button>
+                  </button>
                 </div>
               )}
             </div>
@@ -167,20 +157,23 @@ export default function SearchPage() {
         </div>
       </section>
 
-      {/* Results Section */}
-      <main className="flex-1 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Results Header */}
-          <div className="flex items-center justify-between mb-6">
+      {/* Results */}
+      <main className="flex-1 py-12 md:py-16">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
-              <span className="text-[var(--color-text-secondary)]">
-                {practitioners.length} practitioner
-                {practitioners.length !== 1 ? "s" : ""} found
+              <span className="text-gray-600">
+                <span className="font-semibold" style={{ color: CAMPAIGN_NAVY }}>
+                  {practitioners.length}
+                </span>{" "}
+                practitioner{practitioners.length !== 1 ? "s" : ""} found
               </span>
               {hasActiveFilters && (
                 <button
+                  type="button"
                   onClick={clearFilters}
-                  className="text-sm text-[var(--color-gold)] hover:underline flex items-center gap-1"
+                  className="text-sm font-medium flex items-center gap-1 transition-colors hover:opacity-80"
+                  style={{ color: CAMPAIGN_GOLD }}
                 >
                   <X className="w-3 h-3" />
                   Clear filters
@@ -189,22 +182,22 @@ export default function SearchPage() {
             </div>
           </div>
 
-          {/* Active Filters */}
           {hasActiveFilters && (
-            <div className="flex flex-wrap gap-2 mb-6">
+            <div className="flex flex-wrap gap-2 mb-8">
               {region && (
-                <Badge variant="outline" className="gap-1">
+                <Badge variant="outline" className="gap-1 rounded-lg">
                   <MapPin className="w-3 h-3" />
                   {region}
-                  <button onClick={() => setRegion("")} className="ml-1">
+                  <button type="button" onClick={() => setRegion("")} className="ml-1">
                     <X className="w-3 h-3" />
                   </button>
                 </Badge>
               )}
               {selectedSpecs.map((spec) => (
-                <Badge key={spec} variant="outline" className="gap-1">
+                <Badge key={spec} variant="outline" className="gap-1 rounded-lg">
                   {spec}
                   <button
+                    type="button"
                     onClick={() =>
                       setSelectedSpecs((prev) => prev.filter((s) => s !== spec))
                     }
@@ -217,45 +210,53 @@ export default function SearchPage() {
             </div>
           )}
 
-          {/* Results Grid */}
           {practitioners.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {practitioners.map((practitioner) => (
                 <PractitionerCard
                   key={practitioner.id}
                   practitioner={practitioner}
-                  onClick={() =>
-                    router.push(`/practitioner/${practitioner.id}`)
-                  }
+                  onClick={() => router.push(`/practitioner/${practitioner.id}`)}
+                  className="rounded-xl border-gray-200 hover:shadow-lg hover:border-[#C8A45D]/40 transition-all"
                 />
               ))}
             </div>
           ) : (
-            /* Empty State */
-            <div className="bg-white rounded-[var(--radius-lg)] p-12 text-center shadow-[var(--shadow-sm)]">
-              <div className="w-16 h-16 rounded-full bg-[var(--color-light-gray)] flex items-center justify-center mx-auto mb-6">
-                <Search className="w-8 h-8 text-[var(--color-text-secondary)]" />
+            <div className="bg-white rounded-xl p-12 text-center border border-gray-200 shadow-sm">
+              <div
+                className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6"
+                style={{ backgroundColor: "rgba(200, 164, 93, 0.15)" }}
+              >
+                <Search className="w-8 h-8" style={{ color: CAMPAIGN_GOLD }} />
               </div>
-              <h3 className="text-h3 text-[var(--color-navy)] mb-2">
+              <h3 className="text-xl font-bold mb-2" style={{ color: CAMPAIGN_NAVY }}>
                 No results found
               </h3>
-              <p className="text-[var(--color-text-secondary)] mb-6 max-w-md mx-auto">
+              <p className="text-gray-600 mb-6 max-w-md mx-auto">
                 {hasActiveFilters
                   ? "We couldn't find any practitioners matching your criteria."
                   : "No practitioners have joined the directory yet."}
               </p>
 
               {suggestion && (
-                <div className="flex items-center justify-center gap-2 text-[var(--color-gold)] mb-6">
+                <div
+                  className="flex items-center justify-center gap-2 mb-6"
+                  style={{ color: CAMPAIGN_GOLD }}
+                >
                   <AlertCircle className="w-4 h-4" />
                   <span className="text-sm">{suggestion}</span>
                 </div>
               )}
 
               {hasActiveFilters && (
-                <Button variant="secondary" onClick={clearFilters}>
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="px-8 py-3 rounded-lg font-medium transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                  style={{ backgroundColor: CAMPAIGN_NAVY, color: "white" }}
+                >
                   Clear Filters
-                </Button>
+                </button>
               )}
             </div>
           )}
@@ -263,16 +264,16 @@ export default function SearchPage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-[var(--color-navy)] text-white py-6 mt-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-white/50">
+      <footer className="text-white py-8 mt-auto" style={{ backgroundColor: CAMPAIGN_NAVY }}>
+        <div className="max-w-[1200px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-white/60">
             &copy; {new Date().getFullYear()} South African Institute of Taxation (SAIT)
           </p>
           <div className="flex gap-6 text-xs">
-            <Link href="/privacy" className="text-white/50 hover:text-white">
+            <Link href="/privacy" className="text-white/60 hover:text-white transition-colors">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="text-white/50 hover:text-white">
+            <Link href="/terms" className="text-white/60 hover:text-white transition-colors">
               Terms of Use
             </Link>
           </div>

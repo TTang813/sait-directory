@@ -191,3 +191,19 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-secondary);
 }
+
+/* ---- Campaign theme (style模版) — scoped via .campaign-theme wrapper ---- */
+.campaign-theme {
+  --color-navy: #0b2c5f;
+  --color-gold: #c8a45d;
+  --color-navy-bg: #0b2c5f;
+  --color-off-white: #f8f9fa;
+  --color-light-gray: #e5e7eb;
+  --color-mid-gray: #d1d5db;
+  --color-text-secondary: #4b5563;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-md: 0 4px 12px rgba(11, 44, 95, 0.08);
+  --shadow-lg: 0 10px 28px rgba(11, 44, 95, 0.12);
+}
