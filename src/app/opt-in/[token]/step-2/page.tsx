@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Logo } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
+import { CampaignBanner } from "@/components/campaign-banner";
 import { REGIONS, SPECIALISATION_CATEGORIES } from "@/types";
 import { X, ChevronDown, Check } from "lucide-react";
 
@@ -727,6 +728,8 @@ export default function OptInStep2Page({ params }: { params: Promise<{ token: st
           <Logo width={100} />
         </div>
       </header>
+
+      <CampaignBanner variant="opt-in" />
 
       <main className="flex-1 py-10">
         <div className="max-w-xl mx-auto px-6">

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Logo } from "@/components/ui/logo";
+import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { Select } from "@/components/ui/select";
+import { CAMPAIGN_GOLD, CAMPAIGN_NAVY, CAMPAIGN_PAGE_BG } from "@/lib/campaign-theme";
 import { PractitionerCard } from "@/components/practitioner/practitioner-card";
 import { Badge } from "@/components/ui/badge";
 import { getMockPractitioners } from "@/lib/mock-data";
@@ -14,9 +14,6 @@ import { Search, X, MapPin, AlertCircle, Shield } from "lucide-react";
 const ALL_SPECIALISATIONS = Object.entries(SPECIALISATION_CATEGORIES).flatMap(
   ([, specs]) => specs.map((spec) => ({ value: spec, label: spec }))
 );
-
-const CAMPAIGN_NAVY = "#0B2C5F";
-const CAMPAIGN_GOLD = "#C8A45D";
 
 export default function SearchPage() {
   const router = useRouter();
@@ -48,33 +45,13 @@ export default function SearchPage() {
   const suggestion = getSuggestion();
 
   return (
-    <div className="campaign-theme min-h-screen flex flex-col bg-[#F8F9FA]">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <div className="flex items-center justify-between h-16">
-            <Logo width={120} />
-            <nav className="flex items-center gap-6">
-              <Link
-                href="/search"
-                className="text-sm font-semibold pb-0.5 border-b-2"
-                style={{ color: CAMPAIGN_GOLD, borderColor: CAMPAIGN_GOLD }}
-              >
-                Find a Practitioner
-              </Link>
-              <Link
-                href="/verify"
-                className="text-sm font-medium transition-colors hover:opacity-80"
-                style={{ color: CAMPAIGN_NAVY }}
-              >
-                Verify Practitioner
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+    <div
+      className="campaign-theme min-h-screen flex flex-col"
+      style={{ backgroundColor: CAMPAIGN_PAGE_BG }}
+    >
+      <SiteHeader active="search" />
 
-      {/* Hero + Search — workplace banner + campaign content */}
+      {/* Hero + Search — keep original Find Practitioner banner */}
       <section className="relative overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -263,22 +240,7 @@ export default function SearchPage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="text-white py-8 mt-auto" style={{ backgroundColor: CAMPAIGN_NAVY }}>
-        <div className="max-w-[1200px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-white/60">
-            &copy; {new Date().getFullYear()} South African Institute of Taxation (SAIT)
-          </p>
-          <div className="flex gap-6 text-xs">
-            <Link href="/privacy" className="text-white/60 hover:text-white transition-colors">
-              Privacy Policy
-            </Link>
-            <Link href="/terms" className="text-white/60 hover:text-white transition-colors">
-              Terms of Use
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

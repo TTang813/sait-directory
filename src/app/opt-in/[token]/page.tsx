@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Logo } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { CampaignBanner } from "@/components/campaign-banner";
 import { CheckCircle, ArrowRight } from "lucide-react";
 
 export default function OptInStep1Page({
@@ -25,6 +26,8 @@ export default function OptInStep1Page({
           <Logo width={120} />
         </div>
       </header>
+
+      <CampaignBanner variant="opt-in" />
 
       <main className="flex-1 flex items-center justify-center py-12 px-4">
         <Card className="max-w-lg w-full p-10 text-center">
