@@ -341,10 +341,10 @@ export function LandingPage() {
             </h2>
           </Reveal>
 
-          <div className="relative grid lg:grid-cols-2 gap-6 lg:gap-0 lg:items-center">
-            <Reveal direction="left" className="lg:pr-8 lg:z-10">
-              <HoverLift>
-                <div className="bg-white rounded-3xl p-8 md:p-10 border border-gray-200 shadow-md lg:-rotate-1">
+          <div className="relative grid lg:grid-cols-2 gap-6 lg:items-stretch">
+            <Reveal direction="left" className="h-full">
+              <HoverLift className="h-full">
+                <div className="h-full bg-white rounded-2xl p-8 md:p-10 border border-gray-200 shadow-md">
                   <Search className="w-11 h-11 mb-6" style={{ color: CAMPAIGN_NAVY }} />
                   <h3 className="text-2xl font-bold mb-3" style={{ color: CAMPAIGN_NAVY }}>
                     Find a Trusted Tax Practitioner
@@ -365,10 +365,10 @@ export function LandingPage() {
               </HoverLift>
             </Reveal>
 
-            <Reveal direction="right" delay={0.15} className="lg:pl-8 lg:-mt-6 lg:mb-6">
-              <HoverLift>
+            <Reveal direction="right" delay={0.15} className="h-full">
+              <HoverLift className="h-full">
                 <div
-                  className="rounded-3xl p-8 md:p-10 border-2 shadow-xl lg:rotate-1"
+                  className="h-full rounded-2xl p-8 md:p-10 border-2 shadow-xl"
                   style={{
                     backgroundImage: `linear-gradient(135deg, ${CAMPAIGN_NAVY} 0%, #1a4d8f 100%)`,
                     borderColor: CAMPAIGN_GOLD,
@@ -407,22 +407,32 @@ export function LandingPage() {
           </Reveal>
 
           <div className="relative">
-            <DrawLine
-              className="hidden md:block absolute top-10 left-[8%] right-[8%] h-0.5 bg-gray-200"
-            />
+            <div className="hidden md:flex items-center max-w-3xl mx-auto mb-10 px-2">
+              {STEPS.map(({ step }, index) => (
+                <div key={step} className="contents">
+                  {index > 0 && (
+                    <div className="h-0.5 flex-1 bg-gray-200" aria-hidden />
+                  )}
+                  <div
+                    className="w-14 h-14 flex-shrink-0 rounded-2xl flex items-center justify-center text-lg font-bold relative z-10"
+                    style={{ backgroundColor: CAMPAIGN_NAVY, color: CAMPAIGN_GOLD }}
+                  >
+                    {step}
+                  </div>
+                </div>
+              ))}
+            </div>
+
             <StaggerGroup className="grid md:grid-cols-3 gap-8 md:gap-6">
-              {STEPS.map(({ step, title, body }, index) => (
+              {STEPS.map(({ step, title, body }) => (
                 <StaggerItem key={step} className="relative text-center md:text-left">
                   <div className="flex flex-col md:items-start items-center">
-                    <motion.div
-                      className="w-14 h-14 rounded-2xl flex items-center justify-center text-lg font-bold mb-5 relative z-10"
+                    <div
+                      className="md:hidden w-14 h-14 rounded-2xl flex items-center justify-center text-lg font-bold mb-5"
                       style={{ backgroundColor: CAMPAIGN_NAVY, color: CAMPAIGN_GOLD }}
-                      whileInView={{ rotate: [0, -6, 0] }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.2 + index * 0.15, duration: 0.5 }}
                     >
                       {step}
-                    </motion.div>
+                    </div>
                     <h3 className="text-lg font-bold mb-2" style={{ color: CAMPAIGN_NAVY }}>
                       {title}
                     </h3>
@@ -440,16 +450,16 @@ export function LandingPage() {
         <div className="max-w-[1200px] mx-auto px-6">
           <Reveal>
             <div
-              className="relative grid md:grid-cols-[1fr_auto] gap-8 items-end rounded-3xl p-8 md:p-12 overflow-hidden"
+              className="relative grid md:grid-cols-[1fr_auto] gap-8 items-start rounded-3xl p-8 md:p-12"
               style={{ backgroundColor: "white", borderLeft: `4px solid ${CAMPAIGN_GOLD}` }}
             >
-              <div
-                className="absolute top-0 right-0 text-[10rem] leading-none font-serif text-gray-100 select-none pointer-events-none"
-                aria-hidden
-              >
-                &ldquo;
-              </div>
-              <blockquote>
+              <blockquote className="relative">
+                <div
+                  className="absolute -top-10 md:-top-14 right-0 text-[8rem] md:text-[10rem] leading-none font-serif text-gray-100 select-none pointer-events-none"
+                  aria-hidden
+                >
+                  &rdquo;
+                </div>
                 <p
                   className="text-xl md:text-2xl italic leading-relaxed relative z-10"
                   style={{ color: CAMPAIGN_NAVY }}
@@ -458,7 +468,7 @@ export function LandingPage() {
                   in my work.
                 </p>
               </blockquote>
-              <div className="relative z-10 md:text-right">
+              <div className="relative z-10 md:self-end md:text-right">
                 <div
                   className="w-12 h-12 rounded-full mb-3 md:ml-auto"
                   style={{ backgroundColor: CAMPAIGN_NAVY }}

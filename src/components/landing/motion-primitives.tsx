@@ -190,7 +190,7 @@ export function ParallaxHeroBg({
   const scale = useTransform(scrollYProgress, [0, 1], [1.05, 1.12]);
 
   return (
-    <section ref={ref} className="relative min-h-[88vh] flex items-center overflow-hidden">
+    <section ref={ref} className="relative min-h-[calc(100dvh-4rem)] flex items-center overflow-hidden">
       <motion.div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat will-change-transform"
         style={{
