@@ -196,24 +196,26 @@ h2.title { font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 700; line-height
 .path-card p { font-size: 14px; color: var(--gray-600); margin-bottom: 32px; max-width: 28rem; }
 .path-card.dark p { color: rgba(255,255,255,0.85); }
 
-.steps-connected {
-  display: none; align-items: center; max-width: 48rem; margin: 0 auto 40px; padding: 0 8px;
+.steps-wrap { position: relative; }
+.steps-track {
+  display: none; position: absolute; top: 28px; left: 16.666%; right: 16.666%; height: 2px;
+  background: var(--gray-200); z-index: 0;
 }
-@media (min-width: 768px) { .steps-connected { display: flex; } }
-.step-connector { flex: 1; height: 2px; background: var(--gray-200); }
-.step-num {
-  width: 56px; height: 56px; flex-shrink: 0; border-radius: 16px; background: var(--navy); color: var(--gold);
-  display: grid; place-items: center; font-size: 18px; font-weight: 700;
-}
-.step-num-mobile { margin: 0 auto 20px; }
-@media (min-width: 768px) { .step-num-mobile { display: none; } }
-.steps { display: grid; gap: 32px; }
+@media (min-width: 768px) { .steps-track { display: block; } }
+.steps { display: grid; gap: 32px; position: relative; z-index: 1; }
 @media (min-width: 768px) { .steps { grid-template-columns: repeat(3, 1fr); } }
 .step { text-align: center; }
-@media (min-width: 768px) { .step { text-align: left; } }
+.step-head {
+  width: 100%; height: 56px; display: flex; align-items: center;
+  justify-content: center; margin-bottom: 20px;
+}
+.step-num {
+  position: relative; z-index: 1; width: 56px; height: 56px; flex-shrink: 0; border-radius: 16px;
+  background: var(--navy); color: var(--gold); display: grid; place-items: center;
+  font-size: 18px; font-weight: 700;
+}
 .step h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
 .step p { font-size: 14px; color: var(--gray-600); max-width: 18rem; margin: 0 auto; }
-@media (min-width: 768px) { .step p { margin: 0; } }
 
 .quote-box {
   background: var(--white); border-left: 4px solid var(--gold); border-radius: 24px;

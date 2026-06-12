@@ -407,36 +407,26 @@ export function LandingPage() {
           </Reveal>
 
           <div className="relative">
-            <div className="hidden md:flex items-center max-w-3xl mx-auto mb-10 px-2">
-              {STEPS.map(({ step }, index) => (
-                <div key={step} className="contents">
-                  {index > 0 && (
-                    <div className="h-0.5 flex-1 bg-gray-200" aria-hidden />
-                  )}
-                  <div
-                    className="w-14 h-14 flex-shrink-0 rounded-2xl flex items-center justify-center text-lg font-bold relative z-10"
-                    style={{ backgroundColor: CAMPAIGN_NAVY, color: CAMPAIGN_GOLD }}
-                  >
-                    {step}
-                  </div>
-                </div>
-              ))}
-            </div>
-
+            <div
+              className="hidden md:block absolute top-7 left-1/6 right-1/6 h-0.5 bg-gray-200 z-0"
+              aria-hidden
+            />
             <StaggerGroup className="grid md:grid-cols-3 gap-8 md:gap-6">
               {STEPS.map(({ step, title, body }) => (
-                <StaggerItem key={step} className="relative text-center md:text-left">
-                  <div className="flex flex-col md:items-start items-center">
-                    <div
-                      className="md:hidden w-14 h-14 rounded-2xl flex items-center justify-center text-lg font-bold mb-5"
-                      style={{ backgroundColor: CAMPAIGN_NAVY, color: CAMPAIGN_GOLD }}
-                    >
-                      {step}
+                <StaggerItem key={step} className="relative text-center">
+                  <div className="flex flex-col items-center">
+                    <div className="relative w-full h-14 flex items-center justify-center mb-5">
+                      <div
+                        className="w-14 h-14 flex-shrink-0 rounded-2xl flex items-center justify-center text-lg font-bold relative z-10"
+                        style={{ backgroundColor: CAMPAIGN_NAVY, color: CAMPAIGN_GOLD }}
+                      >
+                        {step}
+                      </div>
                     </div>
                     <h3 className="text-lg font-bold mb-2" style={{ color: CAMPAIGN_NAVY }}>
                       {title}
                     </h3>
-                    <p className="text-sm text-gray-600 leading-relaxed max-w-xs">{body}</p>
+                    <p className="text-sm text-gray-600 leading-relaxed max-w-xs mx-auto">{body}</p>
                   </div>
                 </StaggerItem>
               ))}
