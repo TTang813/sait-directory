@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "export:html": "next build && rm -rf ../handoff/sait-directory-html && cp -R out ../handoff/sait-directory-html",
     "start": "next start",
     "lint": "eslint"
   },

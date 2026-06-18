@@ -5,7 +5,6 @@ import { motion, useReducedMotion } from "motion/react";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import {
   DrawLine,
-  EASE_OUT,
   HoverLift,
   MagneticButton,
   ParallaxHeroBg,
@@ -44,7 +43,7 @@ export function LandingPage() {
       <ParallaxHeroBg imageUrl="/landing-hero.png">
         <div className="relative z-10 w-full py-20 md:py-28">
           <div className="max-w-[1200px] mx-auto px-6">
-            <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-end">
+            <div className="max-w-3xl">
               <motion.div
                 initial={reduced ? false : "hidden"}
                 animate="show"
@@ -109,36 +108,6 @@ export function LandingPage() {
                   </p>
                 </motion.div>
               </motion.div>
-
-              <Reveal direction="right" delay={0.2} className="hidden lg:block">
-                <div
-                  className="relative rounded-2xl border border-white/15 p-8 backdrop-blur-md"
-                  style={{ backgroundColor: "rgba(255,255,255,0.06)" }}
-                >
-                  <p className="text-sm font-semibold uppercase tracking-[0.18em] mb-4 text-white/55">
-                    Why use SAIT?
-                  </p>
-                  <div className="space-y-4">
-                    {["Qualified", "Regulated", "Trusted"].map((label, i) => (
-                      <motion.div
-                        key={label}
-                        initial={reduced ? false : { opacity: 0, x: 16 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.5 + i * 0.12, duration: 0.5, ease: EASE_OUT }}
-                        className="flex items-center gap-3"
-                      >
-                        <span
-                          className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold"
-                          style={{ backgroundColor: "rgba(200,164,93,0.2)", color: CAMPAIGN_GOLD }}
-                        >
-                          {i + 1}
-                        </span>
-                        <span className="text-white/90 font-medium">{label}</span>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-              </Reveal>
             </div>
           </div>
 
@@ -206,70 +175,81 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* Advantages — zigzag editorial */}
+      {/* Advantages */}
       <section className="py-16 md:py-24 relative" style={{ backgroundColor: CAMPAIGN_PAGE_BG }}>
         <div className="max-w-[1200px] mx-auto px-6">
-          <Reveal className="text-center max-w-2xl mx-auto mb-14">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: CAMPAIGN_NAVY }}>
-              Why Choose a SAIT Practitioner?
-            </h2>
-            <p className="text-base text-gray-600 leading-relaxed">
-              SAIT practitioners are recognised professionals who meet strict standards of education,
-              ethics, and ongoing development.
-            </p>
-          </Reveal>
+          <div className="max-w-4xl mx-auto">
+            <Reveal className="mb-14">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: CAMPAIGN_NAVY }}>
+                Why Choose a SAIT Practitioner?
+              </h2>
+              <p className="text-base text-gray-600 leading-relaxed">
+                SAIT practitioners are recognised professionals who meet strict standards of education,
+                ethics, and ongoing development.
+              </p>
+            </Reveal>
 
-          <div className="relative max-w-4xl mx-auto space-y-8">
+            <div className="relative space-y-8">
             <div
               className="hidden md:block absolute left-8 top-4 bottom-4 w-px"
               style={{ backgroundColor: "rgba(200,164,93,0.35)" }}
               aria-hidden
             />
-            {ADVANTAGES.map(({ icon: Icon, title, body }, index) => {
-              const isEven = index % 2 === 0;
-              return (
-                <Reveal
-                  key={title}
-                  direction={isEven ? "left" : "right"}
-                  delay={index * 0.05}
-                  className={`relative md:pl-16 ${isEven ? "md:mr-12" : "md:ml-20"}`}
-                >
-                  <motion.div
-                    className="hidden md:block absolute left-[1.65rem] top-8 h-3 w-3 rounded-full ring-4 ring-[#F8F9FA]"
-                    style={{ backgroundColor: CAMPAIGN_GOLD }}
-                    whileInView={{ scale: [0, 1.2, 1] }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.45, delay: 0.1 }}
-                  />
-                  <HoverLift>
-                    <div className="relative bg-white rounded-2xl p-7 md:p-8 border border-gray-100 shadow-sm">
-                      <span
-                        className={`absolute -top-2 text-5xl font-black opacity-[0.06] select-none ${
-                          isEven ? "left-4" : "right-4"
-                        }`}
-                        style={{ color: CAMPAIGN_NAVY }}
+            {ADVANTAGES.map(({ icon: Icon, title, body }, index) => (
+              <Reveal
+                key={title}
+                direction="left"
+                delay={index * 0.05}
+                className="relative md:pl-16"
+              >
+                <motion.div
+                  className="hidden md:block absolute left-[1.65rem] top-8 h-3 w-3 rounded-full ring-4 ring-[#F8F9FA]"
+                  style={{ backgroundColor: CAMPAIGN_GOLD }}
+                  whileInView={{ scale: [0, 1.2, 1] }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.45, delay: 0.1 }}
+                />
+                <HoverLift>
+                  <div className="relative bg-white rounded-2xl p-7 md:p-8 border border-gray-100 shadow-sm">
+                    <span
+                      className="absolute -top-2 left-4 text-5xl font-black opacity-[0.06] select-none"
+                      style={{ color: CAMPAIGN_NAVY }}
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <div className="flex gap-5 items-start">
+                      <div
+                        className="flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center"
+                        style={{ backgroundColor: CAMPAIGN_NAVY }}
                       >
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <div className="flex gap-5 items-start">
-                        <div
-                          className="flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center"
-                          style={{ backgroundColor: CAMPAIGN_NAVY }}
-                        >
-                          <Icon className="w-7 h-7" style={{ color: CAMPAIGN_GOLD }} />
-                        </div>
-                        <div>
-                          <h3 className="text-lg font-bold mb-2" style={{ color: CAMPAIGN_NAVY }}>
-                            {title}
-                          </h3>
-                          <p className="text-sm text-gray-600 leading-relaxed">{body}</p>
-                        </div>
+                        <Icon className="w-7 h-7" style={{ color: CAMPAIGN_GOLD }} />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold mb-2" style={{ color: CAMPAIGN_NAVY }}>
+                          {title}
+                        </h3>
+                        <p className="text-sm text-gray-600 leading-relaxed">{body}</p>
                       </div>
                     </div>
-                  </HoverLift>
-                </Reveal>
-              );
-            })}
+                  </div>
+                </HoverLift>
+              </Reveal>
+            ))}
+          </div>
+
+          <Reveal className="mt-12 md:mt-16 pt-10 border-t border-gray-200/70 text-left">
+            <blockquote>
+              <p className="text-base md:text-lg italic leading-relaxed" style={{ color: CAMPAIGN_NAVY }}>
+                <span style={{ color: CAMPAIGN_GOLD }}>&ldquo;</span>
+                Being a SAIT member has strengthened my credibility and given my clients confidence in
+                my work.
+                <span style={{ color: CAMPAIGN_GOLD }}>&rdquo;</span>
+              </p>
+            </blockquote>
+            <p className="mt-4 text-sm text-gray-500">
+              — SAIT Tax Professional · Chartered Tax Adviser
+            </p>
+          </Reveal>
           </div>
         </div>
       </section>
@@ -432,45 +412,6 @@ export function LandingPage() {
               ))}
             </StaggerGroup>
           </div>
-        </div>
-      </section>
-
-      {/* Testimonial — editorial pull quote */}
-      <section className="py-16 md:py-20">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <Reveal>
-            <div
-              className="relative grid md:grid-cols-[1fr_auto] gap-8 items-start rounded-3xl p-8 md:p-12"
-              style={{ backgroundColor: "white", borderLeft: `4px solid ${CAMPAIGN_GOLD}` }}
-            >
-              <blockquote className="relative">
-                <div
-                  className="absolute -top-10 md:-top-14 right-0 text-[8rem] md:text-[10rem] leading-none font-serif text-gray-100 select-none pointer-events-none"
-                  aria-hidden
-                >
-                  &rdquo;
-                </div>
-                <p
-                  className="text-xl md:text-2xl italic leading-relaxed relative z-10"
-                  style={{ color: CAMPAIGN_NAVY }}
-                >
-                  Being a SAIT member has strengthened my credibility and given my clients confidence
-                  in my work.
-                </p>
-              </blockquote>
-              <div className="relative z-10 md:self-end md:text-right">
-                <div
-                  className="w-12 h-12 rounded-full mb-3 md:ml-auto"
-                  style={{ backgroundColor: CAMPAIGN_NAVY }}
-                  aria-hidden
-                />
-                <div className="text-sm font-semibold" style={{ color: CAMPAIGN_NAVY }}>
-                  SAIT Tax Professional
-                </div>
-                <div className="text-xs text-gray-500">Chartered Tax Adviser</div>
-              </div>
-            </div>
-          </Reveal>
         </div>
       </section>
 

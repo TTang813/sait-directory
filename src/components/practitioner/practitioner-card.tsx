@@ -18,13 +18,17 @@ export function PractitionerCard({
   onClick,
   className,
 }: PractitionerCardProps) {
-  const displayRegions = !practitioner.regions ||
-    practitioner.regions.length === 0 ||
-    practitioner.regions.length === REGIONS.length
-    ? "All Regions"
-    : practitioner.regions.length === 1
-    ? practitioner.regions[0]
-    : `${practitioner.regions.length} regions`;
+  const operatingRegions =
+    practitioner.operatingRegions.length > 0
+      ? practitioner.operatingRegions
+      : practitioner.regions ?? [practitioner.locatedRegion];
+
+  const displayRegions =
+    operatingRegions.length === 0 || operatingRegions.length === REGIONS.length
+      ? "All Regions"
+      : operatingRegions.length === 1
+        ? operatingRegions[0]
+        : `${operatingRegions.length} regions`;
 
   return (
     <Card
@@ -45,10 +49,14 @@ export function PractitionerCard({
             </div>
           )}
         </div>
-        <Badge variant="active">
-          <FileCheck className="w-3 h-3" />
-          SAIT Member
-        </Badge>
+        {practitioner.isActive ? (
+          <Badge variant="active">
+            <FileCheck className="w-3 h-3" />
+            SAIT Member
+          </Badge>
+        ) : (
+          <Badge variant="inactive">Inactive Member</Badge>
+        )}
       </div>
 
       {/* Details */}

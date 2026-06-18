@@ -1,16 +1,63 @@
-import type { Practitioner } from "@/types";
+import {
+  DEFAULT_DISPLAY_FIELDS,
+  type Practitioner,
+  type PractitionerDisplayFields,
+} from "@/types";
 
 // ============================================
 // Mock Data — SAIT Practitioner Directory
 // Based on South African context
 // ============================================
 
-export const mockPractitioners: Practitioner[] = [
+const REGION_TOWNS: Record<string, string[]> = {
+  "Eastern Cape": ["Gqeberha", "East London", "Mthatha"],
+  "Free State": ["Bloemfontein", "Welkom", "Bethlehem"],
+  Gauteng: ["Johannesburg", "Pretoria", "Sandton"],
+  "KwaZulu-Natal": ["Durban", "Pietermaritzburg", "Richards Bay"],
+  Limpopo: ["Polokwane", "Tzaneen", "Thohoyandou"],
+  Mpumalanga: ["Nelspruit", "Witbank", "Secunda"],
+  "Northern Cape": ["Kimberley", "Upington", "Springbok"],
+  "North West": ["Rustenburg", "Mahikeng", "Klerksdorp"],
+  "Western Cape": ["Cape Town", "Stellenbosch", "George"],
+};
+
+type RawPractitioner = Omit<
+  Practitioner,
+  "displayName" | "locatedRegion" | "operatingRegions" | "towns" | "displayFields"
+> & {
+  displayName?: string;
+  locatedRegion?: string;
+  operatingRegions?: string[];
+  towns?: string[];
+  displayFields?: Partial<PractitionerDisplayFields>;
+};
+
+function enrichPractitioner(raw: RawPractitioner): Practitioner {
+  const operatingRegions = raw.operatingRegions ?? raw.regions ?? [raw.region];
+  const locatedRegion = raw.locatedRegion ?? raw.region;
+  const defaultTown = REGION_TOWNS[locatedRegion]?.[0] ?? locatedRegion;
+
+  return {
+    ...raw,
+    displayName: raw.displayName ?? raw.fullName,
+    locatedRegion,
+    operatingRegions,
+    towns: raw.towns ?? [defaultTown],
+    regions: raw.regions ?? operatingRegions,
+    displayFields: {
+      ...DEFAULT_DISPLAY_FIELDS,
+      ...raw.displayFields,
+    },
+  };
+}
+
+const rawMockPractitioners: RawPractitioner[] = [
   {
     id: "pract-001",
     fullName: "Thandi Molefe",
     region: "Gauteng",
     regions: ["Gauteng", "Limpopo"],
+    towns: ["Johannesburg", "Polokwane"],
     specialisation: ["Corporate Income Tax", "Tax Compliance & Returns", "Tax Advisory"],
     prNumber: "PR-2024-08471",
     companyName: "Molefe Tax Consultants",
@@ -24,6 +71,7 @@ export const mockPractitioners: Practitioner[] = [
     fullName: "Johan van der Berg",
     region: "Western Cape",
     regions: ["Western Cape"],
+    towns: ["Cape Town"],
     specialisation: ["Value Added Tax (VAT)", "International Tax", "Transfer Pricing"],
     prNumber: "PR-2023-06532",
     companyName: "Cape Town Tax Partners",
@@ -37,6 +85,7 @@ export const mockPractitioners: Practitioner[] = [
     fullName: "Amahle Nkosi",
     region: "KwaZulu-Natal",
     regions: ["KwaZulu-Natal"],
+    towns: ["Durban"],
     specialisation: ["Personal Income Tax", "Estate Planning & Estate Duty", "Retirement & Pension Planning"],
     prNumber: "PR-2022-04123",
     companyName: "Durban Financial Services",
@@ -50,6 +99,7 @@ export const mockPractitioners: Practitioner[] = [
     fullName: "Pieter Smit",
     region: "Gauteng",
     regions: ["Gauteng", "Mpumalanga"],
+    towns: ["Pretoria", "Nelspruit"],
     specialisation: ["Small Business Tax", "Payroll Tax / PAYE", "Tax Compliance & Returns"],
     prNumber: "PR-2021-02891",
     companyName: "Smit & Associates",
@@ -63,6 +113,7 @@ export const mockPractitioners: Practitioner[] = [
     fullName: "Fatima Patel",
     region: "KwaZulu-Natal",
     regions: ["KwaZulu-Natal", "Eastern Cape"],
+    towns: ["Durban", "Gqeberha"],
     specialisation: ["Customs & Excise", "SARS Voluntary Disclosure", "Transfer Duty"],
     prNumber: "PR-2020-01547",
     companyName: undefined,
@@ -70,12 +121,14 @@ export const mockPractitioners: Practitioner[] = [
     acceptingClients: true,
     isActive: true,
     isOptedIn: true,
+    displayFields: { showCompanyName: false },
   },
   {
     id: "pract-006",
     fullName: "Lerato Mokoena",
     region: "Mpumalanga",
     regions: ["Mpumalanga"],
+    towns: ["Nelspruit"],
     specialisation: ["Corporate Income Tax", "Tax Due Diligence", "Mergers & Acquisitions Tax"],
     prNumber: "PR-2023-07102",
     companyName: "Lowveld Business Advisors",
@@ -89,6 +142,7 @@ export const mockPractitioners: Practitioner[] = [
     fullName: "Hendrik van Wyk",
     region: "Northern Cape",
     regions: ["Northern Cape"],
+    towns: ["Kimberley"],
     specialisation: ["Mining & Resources Tax", "Carbon Tax", "Tax Dispute Resolution & Litigation"],
     prNumber: "PR-2019-00983",
     companyName: "Kimberley Tax Solutions",
@@ -102,6 +156,7 @@ export const mockPractitioners: Practitioner[] = [
     fullName: "Nokuthula Dlamini",
     region: "Eastern Cape",
     regions: ["Eastern Cape"],
+    towns: ["Gqeberha"],
     specialisation: ["Payroll Tax / PAYE", "Skills Development Levy", "UIF & COIDA"],
     prNumber: "PR-2022-03872",
     companyName: "East Cape Payroll Services",
@@ -115,6 +170,7 @@ export const mockPractitioners: Practitioner[] = [
     fullName: "Willem Oosthuizen",
     region: "Free State",
     regions: ["Free State"],
+    towns: ["Bloemfontein"],
     specialisation: ["Personal Income Tax", "Capital Gains Tax", "Donations Tax"],
     prNumber: "PR-2021-02215",
     companyName: "Bloemfontein Tax Practitioners",
@@ -128,6 +184,7 @@ export const mockPractitioners: Practitioner[] = [
     fullName: "Precious Khumalo",
     region: "Gauteng",
     regions: ["Gauteng", "North West"],
+    towns: ["Johannesburg", "Rustenburg"],
     specialisation: ["Non-profit & PBO Tax", "Tax Advisory", "Tax Compliance & Returns"],
     prNumber: "PR-2023-06891",
     companyName: "JHB NPO Advisory",
@@ -141,6 +198,7 @@ export const mockPractitioners: Practitioner[] = [
     fullName: "Charl Botha",
     region: "Western Cape",
     regions: ["Western Cape"],
+    towns: ["Stellenbosch"],
     specialisation: ["Property Tax", "Transfer Duty", "Estate Planning & Estate Duty"],
     prNumber: "PR-2020-01124",
     companyName: "Stellenbosch Property Tax",
@@ -148,12 +206,14 @@ export const mockPractitioners: Practitioner[] = [
     acceptingClients: true,
     isActive: true,
     isOptedIn: true,
+    displayFields: { showPRNumber: true },
   },
   {
     id: "pract-012",
     fullName: "Nomfundo Zulu",
     region: "Limpopo",
     regions: ["Limpopo"],
+    towns: ["Polokwane"],
     specialisation: ["Employee Benefits & Fringe Benefits Tax", "Payroll Tax / PAYE", "Skills Development Levy"],
     prNumber: "PR-2022-04589",
     companyName: "Polokwane HR & Tax",
@@ -167,6 +227,7 @@ export const mockPractitioners: Practitioner[] = [
     fullName: "Robert Williams",
     region: "Gauteng",
     regions: ["Gauteng", "KwaZulu-Natal"],
+    towns: ["Sandton", "Durban"],
     specialisation: ["International Tax", "Double Tax Agreements", "Exchange Control"],
     prNumber: "PR-2018-00621",
     companyName: "Global Tax Consulting SA",
@@ -180,6 +241,7 @@ export const mockPractitioners: Practitioner[] = [
     fullName: "Anita Naidoo",
     region: "KwaZulu-Natal",
     regions: ["KwaZulu-Natal"],
+    towns: ["Pietermaritzburg"],
     specialisation: ["Value Added Tax (VAT)", "Tax Compliance & Returns", "SARS Voluntary Disclosure"],
     prNumber: "PR-2021-03002",
     companyName: "Pietermaritzburg VAT Specialists",
@@ -193,6 +255,7 @@ export const mockPractitioners: Practitioner[] = [
     fullName: "Morne Nel",
     region: "North West",
     regions: ["North West"],
+    towns: ["Rustenburg"],
     specialisation: ["Small Business Tax", "Corporate Income Tax", "Tax Advisory"],
     prNumber: "PR-2023-07234",
     companyName: undefined,
@@ -200,25 +263,28 @@ export const mockPractitioners: Practitioner[] = [
     acceptingClients: true,
     isActive: true,
     isOptedIn: true,
+    displayFields: { showCompanyName: false },
   },
   {
     id: "pract-016",
     fullName: "Susan Thompson",
     region: "Western Cape",
     regions: ["Western Cape"],
+    towns: ["Cape Town"],
     specialisation: ["Personal Income Tax"],
     prNumber: "PR-2017-00321",
     companyName: undefined,
     phone: undefined,
     acceptingClients: false,
     isActive: false,
-    isOptedIn: false,
+    isOptedIn: true,
   },
   {
     id: "pract-017",
     fullName: "David Mthethwa",
     region: "Gauteng",
     regions: ["Gauteng"],
+    towns: ["Johannesburg"],
     specialisation: ["Tax Dispute Resolution & Litigation"],
     prNumber: "PR-2016-00145",
     companyName: undefined,
@@ -227,9 +293,32 @@ export const mockPractitioners: Practitioner[] = [
     isActive: false,
     isOptedIn: false,
   },
+  {
+    id: "pract-018",
+    fullName: "Grace Mabasa",
+    region: "Limpopo",
+    regions: ["Limpopo", "Mpumalanga"],
+    towns: ["Tzaneen", "Nelspruit"],
+    specialisation: ["Personal Income Tax", "Small Business Tax"],
+    prNumber: "PR-2018-00876",
+    companyName: "Mabasa Tax Services",
+    phone: undefined,
+    acceptingClients: false,
+    isActive: false,
+    isOptedIn: true,
+  },
 ];
 
-// Mock search results helper
+export const mockPractitioners: Practitioner[] =
+  rawMockPractitioners.map(enrichPractitioner);
+
+function getOperatingRegions(practitioner: Practitioner): string[] {
+  return practitioner.operatingRegions.length > 0
+    ? practitioner.operatingRegions
+    : practitioner.regions ?? [practitioner.locatedRegion];
+}
+
+// Mock search results helper — directory shows all opted-in members (active + inactive)
 export function getMockPractitioners(filters?: {
   regions?: string[];
   region?: string;
@@ -237,19 +326,31 @@ export function getMockPractitioners(filters?: {
   acceptingClients?: boolean;
   prNumber?: string;
 }): Practitioner[] {
-  let results = mockPractitioners.filter((p) => p.isOptedIn && p.isActive);
+  let results = mockPractitioners.filter((p) => p.isOptedIn);
 
   if (filters?.regions && filters.regions.length > 0) {
     results = results.filter((p) => {
-      if (!p.regions || p.regions.length === 0 || p.regions.length === 9) return true;
-      return p.regions.some((r) => filters.regions!.includes(r));
+      const operatingRegions = getOperatingRegions(p);
+      if (
+        operatingRegions.length === 0 ||
+        operatingRegions.length === 9
+      ) {
+        return true;
+      }
+      return operatingRegions.some((r) => filters.regions!.includes(r));
     });
   }
 
   if (filters?.region) {
     results = results.filter((p) => {
-      if (!p.regions || p.regions.length === 0 || p.regions.length === 9) return true;
-      return filters.region ? p.regions.includes(filters.region) : true;
+      const operatingRegions = getOperatingRegions(p);
+      if (
+        operatingRegions.length === 0 ||
+        operatingRegions.length === 9
+      ) {
+        return true;
+      }
+      return operatingRegions.includes(filters.region!);
     });
   }
 
@@ -312,7 +413,7 @@ export function verifyPractitionerInactive(query: string): {
   const found = mockPractitioners.find(
     (p) =>
       (p.fullName.toLowerCase().includes(lowerQuery) ||
-      p.prNumber.toLowerCase().includes(lowerQuery)) &&
+        p.prNumber.toLowerCase().includes(lowerQuery)) &&
       !p.isActive
   );
 

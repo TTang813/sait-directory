@@ -114,6 +114,8 @@ section { padding: 56px 0; }
 @media (min-width: 768px) { section { padding: 80px 0; } }
 .section-white { background: var(--white); }
 .section-center { text-align: center; max-width: 48rem; margin: 0 auto 40px; }
+.section-intro { text-align: left; margin-bottom: 40px; }
+.advantages-center { max-width: 56rem; margin: 0 auto; }
 .kicker { font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
 h2.title { font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 700; line-height: 1.2; margin-bottom: 16px; }
 .desc { color: var(--gray-600); font-size: 15px; }
@@ -138,7 +140,7 @@ h2.title { font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 700; line-height
 .card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
 .card p { font-size: 14px; color: var(--gray-600); }
 
-.timeline { max-width: 56rem; margin: 0 auto; position: relative; }
+.timeline { position: relative; }
 .timeline-line {
   display: none; position: absolute; left: 32px; top: 16px; bottom: 16px; width: 1px;
   background: rgba(200,164,93,0.35);
@@ -217,25 +219,17 @@ h2.title { font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 700; line-height
 .step h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
 .step p { font-size: 14px; color: var(--gray-600); max-width: 18rem; margin: 0 auto; }
 
-.quote-box {
-  background: var(--white); border-left: 4px solid var(--gold); border-radius: 24px;
-  padding: 32px 40px; display: grid; gap: 32px; position: relative; overflow: hidden;
+.section-quote {
+  margin-top: 48px; padding-top: 40px; border-top: 1px solid rgba(0,0,0,0.08);
+  text-align: left;
 }
-@media (min-width: 768px) { .quote-box { grid-template-columns: 1fr auto; align-items: start; padding: 48px; } }
-blockquote {
-  position: relative; font-size: clamp(1.125rem, 2vw, 1.5rem); font-style: italic;
-  line-height: 1.6; z-index: 1;
+.section-quote blockquote { margin: 0; }
+.section-quote blockquote p {
+  font-size: clamp(1rem, 1.6vw, 1.125rem); font-style: italic; line-height: 1.65;
+  color: var(--navy); margin: 0;
 }
-.quote-mark {
-  position: absolute; top: -2.5rem; right: 0; font-size: 10rem; line-height: 1;
-  color: var(--gray-100); font-family: Georgia, serif; pointer-events: none;
-}
-@media (min-width: 768px) { .quote-mark { top: -3.5rem; } }
-.quote-author { position: relative; z-index: 1; }
-.avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--navy); margin-bottom: 12px; }
-@media (min-width: 768px) { .quote-author { align-self: end; text-align: right; } .avatar { margin-left: auto; } }
-.quote-author strong { display: block; font-size: 14px; }
-.quote-author span { font-size: 12px; color: var(--gray-600); }
+.quote-open, .quote-close { color: var(--gold); }
+.quote-attribution { margin: 16px 0 0; font-size: 14px; color: var(--gray-600); }
 
 .cta-band { background: var(--navy); color: var(--white); text-align: center; position: relative; overflow: hidden; }
 .cta-glow {

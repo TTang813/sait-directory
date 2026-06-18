@@ -10,6 +10,11 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { mockPractitioners } from "@/lib/mock-data";
 import {
+  EXTERNAL_LEGAL_LINK_PROPS,
+  SAIT_PRIVACY_URL,
+  SAIT_TERMS_URL,
+} from "@/lib/legal-links";
+import {
   ArrowLeft,
   MapPin,
   Building2,
@@ -116,11 +121,15 @@ export default function PractitionerPage() {
     );
   }
 
-  const practitionerRegions = !practitioner.regions ||
-    practitioner.regions.length === 0 ||
-    practitioner.regions.length === 9
-    ? "All Regions"
-    : practitioner.regions.join(", ");
+  const operatingRegions =
+    practitioner.operatingRegions.length > 0
+      ? practitioner.operatingRegions
+      : practitioner.regions ?? [practitioner.locatedRegion];
+
+  const practitionerRegions =
+    operatingRegions.length === 0 || operatingRegions.length === 9
+      ? "All Regions"
+      : operatingRegions.join(", ");
 
   return (
     <div className="min-h-screen flex flex-col bg-[var(--color-off-white)]">
@@ -161,10 +170,14 @@ export default function PractitionerPage() {
                   <h1 className="text-2xl font-bold text-[var(--color-navy)]">
                     {practitioner.fullName}
                   </h1>
-                  <Badge variant="active">
-                    <FileCheck className="w-3 h-3" />
-                    SAIT Member
-                  </Badge>
+                  {practitioner.isActive ? (
+                    <Badge variant="active">
+                      <FileCheck className="w-3 h-3" />
+                      SAIT Member
+                    </Badge>
+                  ) : (
+                    <Badge variant="inactive">Inactive Member</Badge>
+                  )}
                 </div>
                 {practitioner.companyName && (
                   <div className="flex items-center gap-2 text-[var(--color-text-secondary)]">
@@ -315,9 +328,13 @@ export default function PractitionerPage() {
                   />
                   <span className="text-sm text-[var(--color-text-secondary)]">
                     I agree to the{" "}
-                    <Link href="/privacy" className="text-[var(--color-gold)] hover:underline">
+                    <a
+                      href={SAIT_PRIVACY_URL}
+                      {...EXTERNAL_LEGAL_LINK_PROPS}
+                      className="text-[var(--color-gold)] hover:underline"
+                    >
                       Privacy Policy
-                    </Link>{" "}
+                    </a>{" "}
                     and consent to SAIT forwarding my enquiry to this practitioner.
                   </span>
                 </label>
@@ -363,12 +380,20 @@ export default function PractitionerPage() {
             &copy; {new Date().getFullYear()} South African Institute of Taxation (SAIT)
           </p>
           <div className="flex gap-6 text-xs">
-            <Link href="/privacy" className="text-white/50 hover:text-white">
+            <a
+              href={SAIT_PRIVACY_URL}
+              {...EXTERNAL_LEGAL_LINK_PROPS}
+              className="text-white/50 hover:text-white"
+            >
               Privacy Policy
-            </Link>
-            <Link href="/terms" className="text-white/50 hover:text-white">
-              Terms of Use
-            </Link>
+            </a>
+            <a
+              href={SAIT_TERMS_URL}
+              {...EXTERNAL_LEGAL_LINK_PROPS}
+              className="text-white/50 hover:text-white"
+            >
+              Terms &amp; Conditions
+            </a>
           </div>
         </div>
       </footer>

@@ -76,8 +76,8 @@ export const STEPS = [
   },
   {
     step: "2",
-    title: "Connect or Register",
-    body: "Reach out to a professional or complete your registration",
+    title: "Connect or Apply",
+    body: "Reach out to a practitioner, or apply for SAIT membership at thesait.org.za",
   },
   {
     step: "3",

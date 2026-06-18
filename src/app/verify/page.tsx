@@ -11,7 +11,6 @@ import {
   Search,
   Shield,
   CheckCircle,
-  AlertTriangle,
   XCircle,
   Info,
   ArrowRight,
@@ -185,38 +184,31 @@ export default function VerifyPage() {
 
                 {status === "inactive" && result && (
                   <div className="rounded-xl p-6 border-2 border-amber-400 bg-amber-50/50">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
-                        <AlertTriangle className="w-6 h-6 text-amber-600" />
+                    <Badge variant="inactive" className="mb-4">
+                      Inactive Member
+                    </Badge>
+                    <dl className="space-y-3">
+                      <div>
+                        <dt className="text-xs text-gray-500 uppercase tracking-wider">Name</dt>
+                        <dd className="text-lg font-semibold" style={{ color: CAMPAIGN_NAVY }}>
+                          {result.fullName}
+                        </dd>
                       </div>
-                      <div className="flex-1">
-                        <Badge variant="inactive" className="mb-3">
-                          Inactive Member
-                        </Badge>
-                        <dl className="space-y-3">
-                          <div>
-                            <dt className="text-xs text-gray-500 uppercase tracking-wider">Name</dt>
-                            <dd className="text-lg font-semibold" style={{ color: CAMPAIGN_NAVY }}>
-                              {result.fullName}
-                            </dd>
-                          </div>
-                          <div>
-                            <dt className="text-xs text-gray-500 uppercase tracking-wider">
-                              PR Number
-                            </dt>
-                            <dd className="font-mono text-sm" style={{ color: CAMPAIGN_NAVY }}>
-                              {result.prNumber}
-                            </dd>
-                          </div>
-                          <div>
-                            <dt className="text-xs text-gray-500 uppercase tracking-wider">Status</dt>
-                            <dd className="text-amber-600 font-medium">
-                              Inactive — membership not currently active
-                            </dd>
-                          </div>
-                        </dl>
+                      <div>
+                        <dt className="text-xs text-gray-500 uppercase tracking-wider">
+                          PR Number
+                        </dt>
+                        <dd className="font-mono text-sm" style={{ color: CAMPAIGN_NAVY }}>
+                          {result.prNumber}
+                        </dd>
                       </div>
-                    </div>
+                      <div>
+                        <dt className="text-xs text-gray-500 uppercase tracking-wider">Status</dt>
+                        <dd className="text-amber-600 font-medium">
+                          Inactive — membership not currently active
+                        </dd>
+                      </div>
+                    </dl>
 
                     <div className="mt-6 pt-6 border-t border-gray-200">
                       <p className="text-sm text-gray-600">

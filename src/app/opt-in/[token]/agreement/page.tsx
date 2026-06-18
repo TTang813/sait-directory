@@ -5,6 +5,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { Logo } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
+import {
+  EXTERNAL_LEGAL_LINK_PROPS,
+  SAIT_PRIVACY_URL,
+  SAIT_TERMS_URL,
+} from "@/lib/legal-links";
 import type { ReactNode } from "react";
 
 type Section = {
@@ -493,12 +498,20 @@ export default function OptInAgreementPage({ params }: { params: Promise<{ token
             style={{ color: "var(--color-text-secondary)", fontFamily: "var(--font-body)" }}
           >
             This agreement should be read together with SAIT&apos;s{" "}
-            <a href="#" style={{ color: "var(--color-navy)", textDecoration: "underline", textUnderlineOffset: "2px" }}>
+            <a
+              href={SAIT_PRIVACY_URL}
+              {...EXTERNAL_LEGAL_LINK_PROPS}
+              style={{ color: "var(--color-navy)", textDecoration: "underline", textUnderlineOffset: "2px" }}
+            >
               Privacy Policy
             </a>{" "}
             and{" "}
-            <a href="#" style={{ color: "var(--color-navy)", textDecoration: "underline", textUnderlineOffset: "2px" }}>
-              POPIA Statement
+            <a
+              href={SAIT_TERMS_URL}
+              {...EXTERNAL_LEGAL_LINK_PROPS}
+              style={{ color: "var(--color-navy)", textDecoration: "underline", textUnderlineOffset: "2px" }}
+            >
+              Terms &amp; Conditions
             </a>
             .
           </p>

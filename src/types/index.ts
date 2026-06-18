@@ -2,20 +2,6 @@
 // SAIT Practitioner Directory — Type Definitions
 // ============================================
 
-export interface Practitioner {
-  id: string;
-  fullName: string;
-  region: string;
-  regions?: string[];
-  specialisation: string[];
-  prNumber: string;
-  companyName?: string;
-  phone?: string;
-  acceptingClients: boolean;
-  isActive: boolean;
-  isOptedIn: boolean;
-}
-
 export interface PractitionerDisplayFields {
   showName: boolean;
   showRegion: boolean;
@@ -25,6 +11,42 @@ export interface PractitionerDisplayFields {
   showAcceptingClients: boolean;
   showPRNumber: boolean;
   showPhone: boolean;
+}
+
+export const DEFAULT_DISPLAY_FIELDS: PractitionerDisplayFields = {
+  showName: true,
+  showRegion: true,
+  showRegions: true,
+  showSpecialisation: true,
+  showCompanyName: true,
+  showAcceptingClients: true,
+  showPRNumber: false,
+  showPhone: false,
+};
+
+export interface Practitioner {
+  id: string;
+  fullName: string;
+  /** Public directory name (from opt-in display name). */
+  displayName: string;
+  /** Province where the practitioner is based. */
+  locatedRegion: string;
+  /** Provinces where the practitioner operates (max 3 in opt-in). */
+  operatingRegions: string[];
+  /** Towns/cities within operating regions (max 3 in opt-in). */
+  towns: string[];
+  /** @deprecated Use locatedRegion — kept for backward compatibility. */
+  region: string;
+  /** @deprecated Use operatingRegions — kept for backward compatibility. */
+  regions?: string[];
+  specialisation: string[];
+  prNumber: string;
+  companyName?: string;
+  phone?: string;
+  acceptingClients: boolean;
+  isActive: boolean;
+  isOptedIn: boolean;
+  displayFields: PractitionerDisplayFields;
 }
 
 export interface PractitionerProfile extends Practitioner {

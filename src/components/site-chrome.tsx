@@ -6,6 +6,11 @@ import {
   CAMPAIGN_NAVY,
   type SitePage,
 } from "@/lib/campaign-theme";
+import {
+  EXTERNAL_LEGAL_LINK_PROPS,
+  SAIT_PRIVACY_URL,
+  SAIT_TERMS_URL,
+} from "@/lib/legal-links";
 
 export function SiteHeader({ active }: { active: SitePage }) {
   const linkClass = (page: SitePage) =>
@@ -25,7 +30,7 @@ export function SiteHeader({ active }: { active: SitePage }) {
           <Logo width={120} />
           <nav className="flex items-center gap-6">
             <Link href="/" className={linkClass("landing")} style={linkStyle("landing")}>
-              Landing Page
+              Home
             </Link>
             <Link href="/search" className={linkClass("search")} style={linkStyle("search")}>
               Find a Practitioner
@@ -51,12 +56,20 @@ export function SiteFooter() {
           &copy; {new Date().getFullYear()} South African Institute of Taxation (SAIT)
         </p>
         <div className="flex gap-6 text-xs">
-          <Link href="/privacy" className="text-white/60 hover:text-white transition-colors">
+          <a
+            href={SAIT_PRIVACY_URL}
+            {...EXTERNAL_LEGAL_LINK_PROPS}
+            className="text-white/60 hover:text-white transition-colors"
+          >
             Privacy Policy
-          </Link>
-          <Link href="/terms" className="text-white/60 hover:text-white transition-colors">
-            Terms of Use
-          </Link>
+          </a>
+          <a
+            href={SAIT_TERMS_URL}
+            {...EXTERNAL_LEGAL_LINK_PROPS}
+            className="text-white/60 hover:text-white transition-colors"
+          >
+            Terms &amp; Conditions
+          </a>
         </div>
       </div>
     </footer>
